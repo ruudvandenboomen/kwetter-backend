@@ -14,13 +14,24 @@ import javax.persistence.Persistence;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
-@Stateless @JPA
-public class UserDaoImpl implements UserDao {
+@Stateless
+@JPA
+public class UserDaoJpa extends DaoFacade<User> implements UserDao {
 
     @PersistenceContext(name = "kwetterPU")
     private EntityManager em;
 
-    public UserDaoImpl() {
+    public UserDaoJpa() {
+        super(User.class);
+    }
+
+    @Override
+    protected EntityManager getEntityManager() {
+        return em;
+    }
+
+    public void setEm(EntityManager em) {
+        this.em = em;
     }
 
     @Override

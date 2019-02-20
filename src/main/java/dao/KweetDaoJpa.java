@@ -16,12 +16,22 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
 @Stateless
-public class KweetDaoImpl implements KweetDao {
+public class KweetDaoJpa extends DaoFacade<Kweet> implements KweetDao {
 
     @PersistenceContext(name = "kwetterPU")
     private EntityManager em;
 
-    KweetDaoImpl() {
+    public KweetDaoJpa() {
+        super(Kweet.class);
+    }
+
+    @Override
+    protected EntityManager getEntityManager() {
+        return em;
+    }
+
+    public void setEm(EntityManager em) {
+        this.em = em;
     }
 
     @Override

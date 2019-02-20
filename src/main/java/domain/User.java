@@ -15,58 +15,24 @@ import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 
 @Entity
 @NamedQueries({
     @NamedQuery(name = "user.findByname", query = "SELECT u FROM User u WHERE u.name = :name")})
+@RequiredArgsConstructor 
 public class User implements Serializable {
 
     @Id
     @GeneratedValue
     private Long id;
-    private String name;
+    @Getter @NonNull private String name;
 
     @OneToMany(mappedBy = "user", fetch=FetchType.EAGER)
     private List<Kweet> kweets;
     private Date dateOfBirth;
-
-    public User() {
-    }
-
-    public User(String name) {
-        this.name = name;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public List<Kweet> getKweets() {
-        return kweets;
-    }
-
-    public void setKweets(List<Kweet> kweets) {
-        this.kweets = kweets;
-    }
-
-    public Date getDateOfBirth() {
-        return dateOfBirth;
-    }
-
-    public void setDateOfBirth(Date dateOfBirth) {
-        this.dateOfBirth = dateOfBirth;
-    }
 
 }
