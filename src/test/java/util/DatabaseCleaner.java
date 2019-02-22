@@ -32,7 +32,7 @@ public class DatabaseCleaner {
     }
 
     private void deleteEntities(Class<?> entityType) {
-        em.createQuery("delete from " + getEntityName(entityType)).executeUpdate();
+        em.createQuery("DELETE from " + getEntityName(entityType)).executeUpdate();
     }
 
     protected String getEntityName(Class<?> clazz) {

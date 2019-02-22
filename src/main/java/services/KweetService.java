@@ -19,8 +19,8 @@ public class KweetService {
     @Inject
     private KweetDao dao;
 
-    public void addTweet(Kweet kweet) {
-        this.dao.addTweet(kweet);
+    public void addTweet(User user, Kweet kweet) {
+        this.dao.addTweet(user, kweet);
     }
 
     public List<Kweet> getTweets() {

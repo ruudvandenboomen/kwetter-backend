@@ -23,8 +23,8 @@ public class KweetResource {
     }
 
     @POST
-    public String add(Kweet kweet) {
-        kweetService.addTweet(kweet);
+    public String add(User user, Kweet kweet) {
+        kweetService.addTweet(user, kweet);
         return "Kweet added";
     }
 

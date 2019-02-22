@@ -11,4 +11,5 @@ public interface UserDao {
 
     User getUser(String name);
     void addUser(User user);
+    int count();
 }

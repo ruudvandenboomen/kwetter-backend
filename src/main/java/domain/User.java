@@ -11,6 +11,7 @@ import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -27,12 +28,12 @@ import lombok.RequiredArgsConstructor;
 public class User implements Serializable {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Getter @NonNull private String name;
-
-    @OneToMany(mappedBy = "user", fetch=FetchType.EAGER)
-    private List<Kweet> kweets;
+//
+//    @OneToMany(mappedBy = "user", fetch=FetchType.EAGER)
+//    private List<Kweet> kweets;
     private Date dateOfBirth;
 
 }

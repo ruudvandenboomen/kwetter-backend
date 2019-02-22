@@ -32,4 +32,9 @@ public class UserDaoColl implements UserDao {
         return user;
     }
 
+    @Override
+    public int count() {
+        return users.size();
+    }
+
 }

@@ -6,12 +6,14 @@
 package dao;
 
 import domain.User;
+import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
 @Stateless
@@ -46,6 +48,12 @@ public class UserDaoJpa extends DaoFacade<User> implements UserDao {
         List<User> result = query.getResultList();
         System.out.println("count: " + result.size());
         return result.get(0);
+    }
+
+    @Override
+    public int count() {
+        Query query = em.createQuery("SELECT s FROM Student s");
+        return new ArrayList<>(query.getResultList()).size();
     }
 
 }

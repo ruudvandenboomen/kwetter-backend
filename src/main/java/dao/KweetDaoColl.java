@@ -3,15 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+
 package dao;
 
-import domain.Kweet;
-import domain.User;
-import java.util.List;
+public class KweetDaoColl {
 
-public interface KweetDao {
-
-    void addTweet(User user, Kweet kweet);
-
-    List<Kweet> getTweets(User user);
 }

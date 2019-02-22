@@ -15,14 +15,16 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
 import javax.persistence.RollbackException;
+import static org.hamcrest.CoreMatchers.is;
 import org.junit.After;
+import static org.junit.Assert.assertThat;
 import org.junit.Before;
 import org.junit.Test;
 import util.DatabaseCleaner;
 
 public class UserDaoJpaIT {
  
-    EntityManagerFactory emf = Persistence.createEntityManagerFactory("StudentTestPU");
+    EntityManagerFactory emf = Persistence.createEntityManagerFactory("kwetterTestPU");
     private EntityManager em;
     private EntityTransaction tx;
     private UserDaoJpa userDao;
@@ -32,11 +34,11 @@ public class UserDaoJpaIT {
     
     @Before
     public void setUp() {
-        try {
-            new DatabaseCleaner(emf.createEntityManager()).clean();
-        } catch (SQLException ex) {
-            Logger.getLogger(UserDaoJpaIT.class.getName()).log(Level.SEVERE, null, ex);
-        }
+//        try {
+//            new DatabaseCleaner(emf.createEntityManager()).clean();
+//        } catch (SQLException ex) {
+//            Logger.getLogger(UserDaoJpaIT.class.getName()).log(Level.SEVERE, null, ex);
+//        }
         em = emf.createEntityManager();
         tx = em.getTransaction();
 
@@ -51,29 +53,29 @@ public class UserDaoJpaIT {
     @Test
     public void addingUserSuccessfull() {
         Integer expectedResult = 1;
-        User user = new User("Frank");
+        User user = new User("Fred");
         tx.begin();
-        userDao.addUser(student);
+        userDao.addUser(user);
         tx.commit();
         tx.begin();
-        int aantal = userDao.aantal();
+        int aantal = userDao.count();
         tx.commit();
         assertThat(aantal, is(expectedResult));
     }
 
-//    @Test(expected = RollbackException.class)
-//    public void addingUserFail() {
-//        User user = new User("Frank");
-//        User student1 = new User("Frank");
-//        tx.begin();
-//        userDao.addUser(user);
-//        userDao.addUser(student1);
-//        tx.commit();
-//        assertThat(userDao.aantal(), is(2));
-//    }
+    @Test(expected = RollbackException.class)
+    public void addingUserFail() {
+        User user = new User("Fred");
+        User user2 = new User("Frans");
+        tx.begin();
+        userDao.addUser(user);
+        userDao.addUser(user2);
+        tx.commit();
+        assertThat(userDao.count(), is(2));
+    }
 
     @Test
-    public void findStudentSucceesful() {
+    public void findUserSucceesful() {
         User user = new User("Frank");
         tx.begin();
         userDao.addUser(user);

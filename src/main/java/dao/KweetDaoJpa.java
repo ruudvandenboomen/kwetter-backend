@@ -35,8 +35,8 @@ public class KweetDaoJpa extends DaoFacade<Kweet> implements KweetDao {
     }
 
     @Override
-    public void addTweet(Kweet kweet) {
-        em.persist(kweet);
+    public void addTweet(User user, Kweet kweet) {
+//        em.persist(kweet);
     }
 
     @Override
