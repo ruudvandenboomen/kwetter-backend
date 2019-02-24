@@ -5,6 +5,7 @@
  */
 package dao;
 
+import domain.Kweet;
 import domain.User;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,13 +38,8 @@ public class UserDaoJpa extends DaoFacade<User> implements UserDao {
     }
 
     @Override
-    public void addUser(User user) {
-        em.persist(user);
-    }
-
-    @Override
     public User getUser(String name) {
-        TypedQuery<User> query = em.createNamedQuery("user.findByname", User.class);
+        TypedQuery<User> query = em.createNamedQuery("user.findByName", User.class);
         query.setParameter("name", name);
         List<User> result = query.getResultList();
         System.out.println("count: " + result.size());
@@ -52,8 +48,18 @@ public class UserDaoJpa extends DaoFacade<User> implements UserDao {
 
     @Override
     public int count() {
-        Query query = em.createQuery("SELECT s FROM Student s");
+        Query query = em.createQuery("SELECT u FROM User u");
         return new ArrayList<>(query.getResultList()).size();
+    }
+
+    @Override
+    public void update(User user) {
+        edit(user);
+    }
+
+    @Override
+    public void addUser(User user) {
+        create(user);
     }
 
 }

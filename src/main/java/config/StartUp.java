@@ -8,6 +8,7 @@ package config;
 import dao.JPA;
 import dao.UserDao;
 import domain.User;
+import java.util.Date;
 import javax.annotation.PostConstruct;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
@@ -26,9 +27,9 @@ public class StartUp {
 
     @PostConstruct
     private void intData() {
-        userDoa.addUser(new User("Ruud"));
-        userDoa.addUser(new User("Henk"));
-        userDoa.addUser(new User("Fred"));
+        userDoa.addUser(new User("Ruud", "Ruud@hotmail.com", new Date()));
+        userDoa.addUser(new User("Henk", "Henk@hotmail.com", new Date()));
+        userDoa.addUser(new User("Fred", "Fred@hotmail.com", new Date()));
     }
 
 }

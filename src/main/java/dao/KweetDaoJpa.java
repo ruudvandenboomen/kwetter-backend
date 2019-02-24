@@ -7,6 +7,7 @@ package dao;
 
 import domain.Kweet;
 import domain.User;
+import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -14,20 +15,15 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 
 @Stateless
-public class KweetDaoJpa extends DaoFacade<Kweet> implements KweetDao {
+public class KweetDaoJpa implements KweetDao {
 
     @PersistenceContext(name = "kwetterPU")
     private EntityManager em;
 
     public KweetDaoJpa() {
-        super(Kweet.class);
-    }
-
-    @Override
-    protected EntityManager getEntityManager() {
-        return em;
     }
 
     public void setEm(EntityManager em) {
@@ -35,14 +31,21 @@ public class KweetDaoJpa extends DaoFacade<Kweet> implements KweetDao {
     }
 
     @Override
-    public void addTweet(User user, Kweet kweet) {
-//        em.persist(kweet);
+    public void create(Kweet kweet, User user) {
+        em.persist(kweet);
+        em.merge(user);
     }
 
     @Override
-    public List<Kweet> getTweets(User user) {
-        Query q = em.createNamedQuery("Kweet.getAll", Kweet.class);
-        return q.getResultList();
+    public void delete(Kweet kweet) {
+        em.remove(kweet);
+    }
+
+    @Override
+    public List<Kweet> findByContent(String content) {
+        TypedQuery<Kweet> query = em.createNamedQuery("kweet.findByContent", Kweet.class);
+        query.setParameter("content", content);
+        return query.getResultList();
     }
 
 }

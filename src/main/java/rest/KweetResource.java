@@ -2,6 +2,7 @@ package rest;
 
 import domain.Kweet;
 import domain.User;
+import io.swagger.annotations.Api;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -12,19 +13,15 @@ import services.KweetService;
 
 @Path("kweets")
 @Stateless
+@Api
 public class KweetResource {
 
     @Inject
     KweetService kweetService;
 
-    @GET
-    public List<Kweet> all() {
-        return kweetService.getTweets();
-    }
-
     @POST
     public String add(User user, Kweet kweet) {
-        kweetService.addTweet(user, kweet);
+        kweetService.createKweet(user, kweet);
         return "Kweet added";
     }
 

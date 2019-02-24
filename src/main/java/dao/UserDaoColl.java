@@ -5,6 +5,7 @@
  */
 package dao;
 
+import domain.Kweet;
 import domain.User;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,15 +18,10 @@ public class UserDaoColl implements UserDao {
     }
 
     @Override
-    public void addUser(User user) {
-        users.add(user);
-    }
-
-    @Override
     public User getUser(String name) {
         User user = null;
         for (User u : users) {
-            if (u.getName().equals(name)) {
+            if (u.getUsername().equals(name)) {
                 user = u;
             }
         }
@@ -35,6 +31,16 @@ public class UserDaoColl implements UserDao {
     @Override
     public int count() {
         return users.size();
+    }
+
+    @Override
+    public void update(User user) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void addUser(User user) {
+        users.add(user);
     }
 
 }

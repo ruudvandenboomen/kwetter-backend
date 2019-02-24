@@ -5,6 +5,7 @@
  */
 package dao;
 
+import domain.Kweet;
 import domain.User;
 
 public interface UserDao {
@@ -12,4 +13,5 @@ public interface UserDao {
     User getUser(String name);
     void addUser(User user);
     int count();
+    void update(User user);
 }

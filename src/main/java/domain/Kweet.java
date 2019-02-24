@@ -10,29 +10,43 @@ import java.util.Date;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
 @Entity
+@NamedQueries({
+    @NamedQuery(name = "kweet.findByContent", query = "SELECT k FROM Kweet k WHERE k.content= :content"), 
+})
+@NoArgsConstructor
 public class Kweet implements Serializable {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    @Setter
+    @ManyToOne
+    private User createdBy;
+
+    @Getter
+    @Setter
     private String content;
+
+    @Getter
     private Date postedOn;
 
-    public Kweet() {
-    }
-
-    public Kweet(String content, Date postedOn) {
+    public Kweet(String content) {
         this.content = content;
-        this.postedOn = postedOn;
+        this.postedOn = new Date();
     }
 
 }

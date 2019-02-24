@@ -5,9 +5,11 @@
  */
 package services;
 
+import dao.JPA;
 import dao.KweetDao;
 import domain.Kweet;
 import domain.User;
+import java.util.Date;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -17,14 +19,11 @@ import javax.inject.Inject;
 public class KweetService {
 
     @Inject
+    @JPA
     private KweetDao dao;
 
-    public void addTweet(User user, Kweet kweet) {
-        this.dao.addTweet(user, kweet);
+    public void createKweet(User user, Kweet kweet) {
+        this.dao.create(kweet, user);
     }
 
-    public List<Kweet> getTweets() {
-        User user = new User("Henk");
-        return this.dao.getTweets(user);
-    }
 }

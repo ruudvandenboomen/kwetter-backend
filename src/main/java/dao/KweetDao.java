@@ -11,7 +11,9 @@ import java.util.List;
 
 public interface KweetDao {
 
-    void addTweet(User user, Kweet kweet);
+    void create(Kweet kweet, User user);
 
-    List<Kweet> getTweets(User user);
+    void delete(Kweet kweet);
+
+    List<Kweet> findByContent(String content);
 }

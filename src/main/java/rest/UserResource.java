@@ -7,6 +7,7 @@ package rest;
 
 import dao.JPA;
 import domain.User;
+import io.swagger.annotations.Api;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -20,6 +21,7 @@ import services.UserService;
 
 @Path("user")
 @Stateless
+@Api
 public class UserResource {
 
     @Inject
