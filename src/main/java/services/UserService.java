@@ -5,7 +5,7 @@
  */
 package services;
 
-import dao.JPA;
+import qualifier.JPA;
 import dao.UserDao;
 import domain.User;
 import javax.ejb.EJB;

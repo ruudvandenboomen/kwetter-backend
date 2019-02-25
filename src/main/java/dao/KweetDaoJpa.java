@@ -16,11 +16,13 @@ import javax.persistence.Persistence;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
+import qualifier.JPA;
 
 @Stateless
+@JPA
 public class KweetDaoJpa implements KweetDao {
 
-    @PersistenceContext(name = "kwetterPU")
+    @PersistenceContext(unitName = "kwetterPU")
     private EntityManager em;
 
     public KweetDaoJpa() {

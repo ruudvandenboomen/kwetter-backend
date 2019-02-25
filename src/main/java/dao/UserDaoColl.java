@@ -35,7 +35,11 @@ public class UserDaoColl implements UserDao {
 
     @Override
     public void update(User user) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        for (User u : users) {
+            if (u.getId().equals(user.getId())) {
+                u = user;
+            }
+        }
     }
 
     @Override

@@ -7,6 +7,7 @@ package domain;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -16,6 +17,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -24,8 +26,7 @@ import lombok.Setter;
 
 @Entity
 @NamedQueries({
-    @NamedQuery(name = "kweet.findByContent", query = "SELECT k FROM Kweet k WHERE k.content= :content"), 
-})
+    @NamedQuery(name = "kweet.findByContent", query = "SELECT k FROM Kweet k WHERE k.content= :content"),})
 @NoArgsConstructor
 public class Kweet implements Serializable {
 
@@ -34,8 +35,12 @@ public class Kweet implements Serializable {
     private Long id;
 
     @Setter
-    @ManyToOne
+    @ManyToOne()
     private User createdBy;
+
+    @Getter
+    @OneToMany()
+    private List<User> likes;
 
     @Getter
     @Setter

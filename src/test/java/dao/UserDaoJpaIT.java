@@ -58,8 +58,6 @@ public class UserDaoJpaIT {
         Integer expectedResult = 1;
         tx.begin();
         userDao.create(testUser);
-        tx.commit();
-        tx.begin();
         int aantal = userDao.count();
         tx.commit();
         assertThat(aantal, is(expectedResult));
@@ -118,58 +116,48 @@ public class UserDaoJpaIT {
 //        assertThat(foundUser.getKweets().size(), is(1));
 //        assertThat(foundUser.getKweets().get(0).getContent(), is("Nice weather today!"));
 //    }
+    
+//    @Test
+//    public void likeKweet() {
+//        Date date = new Date();
+//        User user = new User("Fred", "Fred@frans.nl", date);
+//        User user2 = new User("Frans", "Frans@frans.nl", date);
+//
+//        tx.begin();
+//        userDao.addUser(user);
+//        userDao.addUser(user2);
+//        tx.commit();
+//
+//        Kweet kweet = new Kweet("Nice weather today!");
+//        user.addKweet(kweet);
+//
+//        tx.begin();
+//        userDao.update(user);
+//        tx.commit();
+//
+//        user2.addLike(kweet);
+//
+//        tx.begin();
+//        userDao.update(user2);
+//        tx.commit();
+//
+//        tx.begin();
+//        User foundUser = userDao.getUser("Frans");
+//        tx.commit();
+//
+//        assertThat(foundUser.getLikes().size(), is(1));
+//        assertThat(foundUser.getLikes().get(0).getContent(), is("Nice weather today!"));
+//    }
 
     @Test
-    public void likeKweet() {
-        Date date = new Date();
-        User user = new User("Fred", "Fred@frans.nl", date);
-        User user2 = new User("Frans", "Frans@frans.nl", date);
-
-        tx.begin();
-        userDao.addUser(user);
-        userDao.addUser(user2);
-        tx.commit();
-
-        Kweet kweet = new Kweet("Nice weather today!");
-        user.addKweet(kweet);
-
-        tx.begin();
-        userDao.update(user);
-        tx.commit();
-
-        user2.addLike(kweet);
-
-        tx.begin();
-        userDao.update(user2);
-        tx.commit();
-
-        tx.begin();
-        User foundUser = userDao.getUser("Frans");
-        tx.commit();
-
-        assertThat(foundUser.getLikes().size(), is(1));
-        assertThat(foundUser.getLikes().get(0).getContent(), is("Nice weather today!"));
-    }
-
-    @Test
-    public void startFollowing() {
+    public void follow() {
         User user1 = new User("Fred", "Fred@frans.nl", new Date());
         User user2 = new User("Henk", "Henk@frans.nl", new Date());
+        user1.follow(user2);
 
         tx.begin();
         userDao.addUser(user1);
         userDao.addUser(user2);
-        tx.commit();
-
-        user1.addFollower(user2);
-        user2.addFollowing(user1);
-
-        tx.begin();
-        userDao.update(user1);
-        userDao.update(user2);
-        tx.commit();
-
-        tx.begin();
         User foundUser = userDao.getUser("Fred");
         User foundUser1 = userDao.getUser("Henk");
         tx.commit();
@@ -179,6 +167,31 @@ public class UserDaoJpaIT {
 
         assertThat(foundUser.getFollowers().get(0).getUsername(), is("Henk"));
         assertThat(foundUser1.getFollowing().get(0).getUsername(), is("Fred"));
-
     }
+
+    @Test
+    public void unfollow() {
+        User user1 = new User("Fred", "Fred@frans.nl", new Date());
+        User user2 = new User("Henk", "Henk@frans.nl", new Date());
+        user1.follow(user2);
+
+        tx.begin();
+        userDao.addUser(user1);
+        userDao.addUser(user2);
+        tx.commit();
+
+        user1.unfollow(user2);
+
+        tx.begin();
+        userDao.update(user1);
+        userDao.update(user2);
+
+        User foundUser = userDao.getUser("Fred");
+        User foundUser1 = userDao.getUser("Henk");
+        tx.commit();
+
+        assertThat(foundUser.getFollowers().size(), is(0));
+        assertThat(foundUser1.getFollowing().size(), is(0));
+    }
+
 }

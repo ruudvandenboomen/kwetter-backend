@@ -5,6 +5,7 @@
  */
 package dao;
 
+import qualifier.JPA;
 import domain.Kweet;
 import domain.User;
 import java.util.ArrayList;
@@ -21,7 +22,7 @@ import javax.persistence.TypedQuery;
 @JPA
 public class UserDaoJpa extends DaoFacade<User> implements UserDao {
 
-    @PersistenceContext(name = "kwetterPU")
+    @PersistenceContext(unitName = "kwetterPU")
     private EntityManager em;
 
     public UserDaoJpa() {

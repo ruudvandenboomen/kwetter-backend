@@ -5,7 +5,7 @@
  */
 package config;
 
-import dao.JPA;
+import qualifier.JPA;
 import dao.UserDao;
 import domain.User;
 import java.util.Date;

@@ -60,15 +60,15 @@ public class User implements Serializable {
     private Date dateOfBirth;
 
     @Getter
-    @OneToMany(mappedBy = "createdBy", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "createdBy")
     private List<Kweet> kweets = new ArrayList<Kweet>();
 
     @Getter
-    @OneToMany(mappedBy = "createdBy", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "createdBy")
     private List<Kweet> likes = new ArrayList<Kweet>();
 
     @Getter
-    @OneToMany(mappedBy = "createdBy", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "createdBy")
     private List<Kweet> mentions = new ArrayList<Kweet>();
 
     @Getter
@@ -102,27 +102,18 @@ public class User implements Serializable {
         }
     }
 
-    public void addFollower(User user) {
-        if (!followers.contains(user)) {
+    public void follow(User user) {
+        if (!followers.contains(user) && !user.getFollowing().contains(this)) {
             followers.add(user);
+            user.following.add(this);
         }
     }
 
-    public void removeFollower(User user) {
-        if (followers.contains(user)) {
+    public void unfollow(User user) {
+        if (followers.contains(user) && user.getFollowing().contains(this)) {
             followers.remove(user);
+            user.following.remove(this);
         }
     }
 
-    public void addFollowing(User user) {
-        if (!following.contains(user)) {
-            followers.add(user);
-        }
-    }
-
-    public void removeFollow(User user) {
-        if (following.contains(user)) {
-            following.remove(user);
-        }
-    }
 }

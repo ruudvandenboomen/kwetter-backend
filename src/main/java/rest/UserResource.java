@@ -5,9 +5,9 @@
  */
 package rest;
 
-import dao.JPA;
 import domain.User;
 import io.swagger.annotations.Api;
+import java.net.URI;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -17,6 +17,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import services.UserService;
 
 @Path("user")
@@ -29,15 +30,17 @@ public class UserResource {
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public String add(User user) {
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response add(User user) {
         userService.addUser(user);
-        return "User added";
+        URI id = URI.create(user.getUsername());
+        return Response.created(id).build();
     }
 
     @GET
     @Path("{name}")
     @Produces(MediaType.APPLICATION_JSON)
-    public User get(@PathParam("name") String name) {
-        return userService.getUser(name);
+    public Response get(@PathParam("name") String name) {
+        return Response.ok(userService.getUser(name)).build();
     }
 }

@@ -5,7 +5,7 @@
  */
 package services;
 
-import dao.JPA;
+import qualifier.JPA;
 import dao.KweetDao;
 import domain.Kweet;
 import domain.User;
@@ -18,8 +18,7 @@ import javax.inject.Inject;
 @Stateless
 public class KweetService {
 
-    @Inject
-    @JPA
+    @Inject @JPA
     private KweetDao dao;
 
     public void createKweet(User user, Kweet kweet) {

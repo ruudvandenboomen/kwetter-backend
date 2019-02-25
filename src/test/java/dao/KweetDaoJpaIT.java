@@ -29,6 +29,7 @@ public class KweetDaoJpaIT {
     private EntityManager em;
     private EntityTransaction tx;
     private KweetDaoJpa kweetDao;
+    private UserDaoJpa userDao;
 
     public KweetDaoJpaIT() {
     }
@@ -45,6 +46,8 @@ public class KweetDaoJpaIT {
 
         kweetDao = new KweetDaoJpa();
         kweetDao.setEm(em);
+        userDao = new UserDaoJpa();
+        userDao.setEm(em);
     }
 
     @After
@@ -59,9 +62,8 @@ public class KweetDaoJpaIT {
 
         testUser.addKweet(kweet);
         tx.begin();
+        userDao.addUser(testUser);
         kweetDao.create(kweet, testUser);
-        tx.commit();
-        tx.begin();
         List<Kweet> kweets = kweetDao.findByContent(content);
         tx.commit();
 
@@ -72,18 +74,19 @@ public class KweetDaoJpaIT {
     public void removeKweet() {
         String content = "Hi everyone";
         User testUser = new User("Fred", "Fred@frans.nl", new Date());
-        Kweet kweet = new Kweet(content);
 
+        tx.begin();
+        userDao.addUser(testUser);
+        tx.commit();
+
+        Kweet kweet = new Kweet(content);
         testUser.addKweet(kweet);
+
         tx.begin();
         kweetDao.create(kweet, testUser);
-        tx.commit();
 
-        tx.begin();
         kweetDao.delete(kweet);
-        tx.commit();
 
-        tx.begin();
         List<Kweet> kweets = kweetDao.findByContent(content);
         tx.commit();
 
