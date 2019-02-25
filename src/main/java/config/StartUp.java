@@ -5,8 +5,10 @@
  */
 package config;
 
+import dao.KweetDao;
 import qualifier.JPA;
 import dao.UserDao;
+import domain.Kweet;
 import domain.User;
 import java.util.Date;
 import javax.annotation.PostConstruct;
@@ -22,14 +24,23 @@ public class StartUp {
     @JPA
     UserDao userDoa;
 
+    @Inject
+    @JPA
+    KweetDao kweetDao;
+
     public StartUp() {
     }
 
     @PostConstruct
     private void intData() {
-        userDoa.addUser(new User("Ruud", "Ruud@hotmail.com", new Date()));
+        User user = new User("Ruud", "Ruud@hotmail.com", new Date());
+        userDoa.addUser(user);
         userDoa.addUser(new User("Henk", "Henk@hotmail.com", new Date()));
         userDoa.addUser(new User("Fred", "Fred@hotmail.com", new Date()));
+
+        Kweet kweet = new Kweet("Nice weather today!");
+        user.addKweet(kweet);
+        kweetDao.create(kweet, user);
     }
 
 }

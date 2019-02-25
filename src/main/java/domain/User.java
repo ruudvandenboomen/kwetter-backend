@@ -44,18 +44,23 @@ public class User implements Serializable {
     private Long id;
 
     @Getter
+    @Setter
     @NonNull
     @Column(unique = true)
     private String username;
 
     @Getter
+    @Setter
     private String displayName;
 
+    @Getter
+    @Setter
     @NonNull
     @Column(unique = true)
     private String email;
 
     @Getter
+    @Setter 
     @NonNull
     private Date dateOfBirth;
 

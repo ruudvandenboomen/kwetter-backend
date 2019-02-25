@@ -46,7 +46,7 @@ public class KweetDaoJpa implements KweetDao {
     @Override
     public List<Kweet> findByContent(String content) {
         TypedQuery<Kweet> query = em.createNamedQuery("kweet.findByContent", Kweet.class);
-        query.setParameter("content", content);
+        query.setParameter("content", "%" + content + "%");
         return query.getResultList();
     }
 

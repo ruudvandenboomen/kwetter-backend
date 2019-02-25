@@ -18,11 +18,15 @@ import javax.inject.Inject;
 @Stateless
 public class KweetService {
 
-    @Inject @JPA
+    @Inject
+    @JPA
     private KweetDao dao;
 
     public void createKweet(User user, Kweet kweet) {
         this.dao.create(kweet, user);
     }
 
+    public List<Kweet> findByContent(String content) {
+        return this.dao.findByContent(content);
+    }
 }

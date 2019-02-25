@@ -21,6 +21,6 @@ public class UserResourceTest {
 
     @Test
     public void basicTest() {
-//        given().when().get("/user/Henk").then().statusCode(200);
+        given().when().get("/user/Henk").then().statusCode(200);
     }
 }

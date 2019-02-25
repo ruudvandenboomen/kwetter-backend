@@ -26,16 +26,18 @@ import lombok.Setter;
 
 @Entity
 @NamedQueries({
-    @NamedQuery(name = "kweet.findByContent", query = "SELECT k FROM Kweet k WHERE k.content= :content"),})
+    @NamedQuery(name = "kweet.findByContent", query = "SELECT k FROM Kweet k WHERE k.content LIKE :content"),})
 @NoArgsConstructor
 public class Kweet implements Serializable {
 
+    @Getter
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Getter
     @Setter
-    @ManyToOne()
+    @ManyToOne(fetch = FetchType.EAGER)
     private User createdBy;
 
     @Getter
