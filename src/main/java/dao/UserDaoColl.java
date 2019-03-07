@@ -9,7 +9,11 @@ import domain.Kweet;
 import domain.User;
 import java.util.ArrayList;
 import java.util.List;
+import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.inject.Default;
 
+@ApplicationScoped
+@Default
 public class UserDaoColl implements UserDao {
 
     private List<User> users = new ArrayList<User>();

@@ -9,7 +9,11 @@ import domain.Kweet;
 import domain.User;
 import java.util.ArrayList;
 import java.util.List;
+import javax.ejb.Local;
+import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
+import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.context.Dependent;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -18,8 +22,8 @@ import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import qualifier.JPA;
 
-@Stateless
 @JPA
+@Stateless
 public class KweetDaoJpa implements KweetDao {
 
     @PersistenceContext(unitName = "kwetterPU")

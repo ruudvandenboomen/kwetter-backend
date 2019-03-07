@@ -10,7 +10,10 @@ import domain.Kweet;
 import domain.User;
 import java.util.ArrayList;
 import java.util.List;
+import javax.ejb.Local;
+import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
+import javax.enterprise.context.Dependent;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -18,8 +21,8 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
-@Stateless
 @JPA
+@Stateless
 public class UserDaoJpa extends DaoFacade<User> implements UserDao {
 
     @PersistenceContext(unitName = "kwetterPU")

@@ -14,10 +14,6 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 import javax.inject.Qualifier;
 
-/**
- *
- * @author ruudv
- */
 @Qualifier
 @Retention(RUNTIME)
 @Target({METHOD, FIELD, PARAMETER, TYPE})

@@ -5,22 +5,58 @@
  */
 package rest;
 
-import io.restassured.RestAssured;
-import static io.restassured.RestAssured.given;
-import org.junit.Before;
+import com.github.tomakehurst.wiremock.client.WireMock;
+import static com.jayway.restassured.RestAssured.given;
+import com.jayway.restassured.http.ContentType;
+import domain.User;
+import java.io.File;
+import java.net.URL;
+import org.jboss.arquillian.container.test.api.Deployment;
+import org.jboss.arquillian.junit.Arquillian;
+import org.jboss.arquillian.junit.InSequence;
+import org.jboss.arquillian.test.api.ArquillianResource;
+import org.jboss.shrinkwrap.api.ShrinkWrap;
+import org.jboss.shrinkwrap.api.spec.WebArchive;
+import org.jboss.shrinkwrap.resolver.api.maven.Maven;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
+@RunWith(Arquillian.class)
 public class UserResourceTest {
 
-    @Before
-    public void setup() {
-        RestAssured.baseURI = "https://localhost";
-        RestAssured.basePath = "/Kwetter/api/";
-        RestAssured.port = 8080;
+    private final WireMock wiremock = new WireMock(8888);
+
+    @Deployment(testable = false)
+    public static WebArchive createDeployment() {
+        File[] files = Maven.resolver()
+                .loadPomFromFile("pom.xml")
+                .importRuntimeDependencies()
+                .resolve()
+                .withTransitivity()
+                .asFile();
+        return ShrinkWrap.create(WebArchive.class)
+                .addPackage("config")
+                .addPackage("dao")
+                .addPackage("domain")
+                .addPackage("qualifier")
+                .addPackage("rest")
+                .addPackage("services")
+                .addPackage("util")
+                .addAsWebInfResource(new File("src/main/webapp/WEB-INF/beans.xml"))
+                .addAsResource( new File("src/main/resources/META-INF/persistence.xml"))
+                .addAsLibraries(files);
     }
 
+    @ArquillianResource
+    private URL contextPath;
+
     @Test
-    public void basicTest() {
-        given().when().get("/user/Henk").then().statusCode(200);
+    @InSequence(1)
+    public void testAddCompany() {
+        given()
+                .when()
+                .get(contextPath.toString() + "api/user/Ruud")
+                .then()
+                .statusCode(204);
     }
 }
