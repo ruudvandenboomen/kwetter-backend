@@ -42,12 +42,15 @@ public class UserDaoJpa extends DaoFacade<User> implements UserDao {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public User getUser(String name) {
         TypedQuery<User> query = em.createNamedQuery("user.findByName", User.class);
         query.setParameter("name", name);
-        List<User> result = query.getResultList();
-        System.out.println("count: " + result.size());
-        return result.get(0);
+        List<User> users = query.getResultList();
+        if (users != null && !users.isEmpty()) {
+            return users.get(0);
+        }
+        return null;
     }
 
     @Override

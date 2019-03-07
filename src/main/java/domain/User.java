@@ -5,6 +5,7 @@
  */
 package domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -60,30 +61,37 @@ public class User implements Serializable {
     private String email;
 
     @Getter
-    @Setter 
+    @Setter
     @NonNull
     private Date dateOfBirth;
 
     @Getter
-    @OneToMany(mappedBy = "createdBy")
+    @Setter
+    @OneToMany(mappedBy = "createdBy", cascade = CascadeType.ALL)
     private List<Kweet> kweets = new ArrayList<Kweet>();
 
     @Getter
-    @OneToMany(mappedBy = "createdBy")
+    @Setter
+    @OneToMany(mappedBy = "createdBy", cascade = CascadeType.ALL)
     private List<Kweet> likes = new ArrayList<Kweet>();
 
     @Getter
+    @Setter
     @OneToMany(mappedBy = "createdBy")
     private List<Kweet> mentions = new ArrayList<Kweet>();
 
     @Getter
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "user_followers")
+    @Setter
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "user_following",
+            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "following_id", referencedColumnName = "id")
+    )
     private List<User> followers = new ArrayList<User>();
 
     @Getter
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "user_following")
+    @Setter
+    @ManyToMany(mappedBy = "followers", cascade = CascadeType.ALL)
     private List<User> following = new ArrayList<User>();
 
     public void addKweet(Kweet kweet) {
@@ -108,10 +116,8 @@ public class User implements Serializable {
     }
 
     public void follow(User user) {
-        if (!followers.contains(user) && !user.getFollowing().contains(this)) {
-            followers.add(user);
-            user.following.add(this);
-        }
+        following.add(user);
+        user.followers.add(this);
     }
 
     public void unfollow(User user) {

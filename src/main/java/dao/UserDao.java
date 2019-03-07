@@ -7,11 +7,16 @@ package dao;
 
 import domain.Kweet;
 import domain.User;
+import java.util.List;
 
 public interface UserDao {
 
     User getUser(String name);
+
     void addUser(User user);
+
     int count();
+
     void update(User user);
+
 }

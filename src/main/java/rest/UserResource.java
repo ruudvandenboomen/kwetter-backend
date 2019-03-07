@@ -5,17 +5,25 @@
  */
 package rest;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import domain.User;
 import io.swagger.annotations.Api;
 import java.net.URI;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import static javax.ws.rs.HttpMethod.PUT;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import services.UserService;
@@ -38,9 +46,49 @@ public class UserResource {
     }
 
     @GET
-    @Path("{name}")
+    @Path("{username}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response get(@PathParam("name") String name) {
-        return Response.ok(userService.getUser(name)).build();
+    public Response getByName(@PathParam("username") String username) {
+        User user = userService.getUser(username);
+        if (user == null) {
+            throw new WebApplicationException(Response.Status.NOT_FOUND);
+        } else {
+            return Response.ok(user).build();
+        }
+    }
+
+    @GET
+    @Path("{name}/followers")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getFollowers(@PathParam("name") String name) {
+        List<String> followers = userService.getFollowers(name);
+        if (followers == null) {
+            throw new WebApplicationException(Response.Status.NOT_FOUND);
+        } else {
+            return Response.ok(followers).build();
+        }
+    }
+
+    @GET
+    @Path("{username}/following")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getFollowing(@PathParam("username") String username) {
+        List<String> following = userService.getFollowing(username);
+        if (following == null) {
+            throw new WebApplicationException(Response.Status.BAD_REQUEST);
+        } else {
+            return Response.ok(following).build();
+        }
+    }
+
+    @PUT
+    @Path("{username}/following/add/{userToFollow}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response follow(@PathParam("username") String username, @PathParam("userToFollow") String userToFollow) {
+        if (userService.addFollow(username, userToFollow)) {
+            return Response.ok().build();
+        } else {
+            throw new WebApplicationException(Response.Status.BAD_REQUEST);
+        }
     }
 }
