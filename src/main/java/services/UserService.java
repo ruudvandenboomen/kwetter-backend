@@ -6,7 +6,7 @@
 package services;
 
 import qualifier.JPA;
-import dao.UserDao;
+import dao.interfaces.UserDao;
 import domain.User;
 import exceptions.UserNotFoundException;
 import java.util.ArrayList;

@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package dao;
+package dao.Coll;
 
+import dao.interfaces.HashtagDao;
 import domain.Hashtag;
 
 public class HashtagDaoColl implements HashtagDao {

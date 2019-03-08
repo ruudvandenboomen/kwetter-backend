@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package dao;
+package dao.Coll;
 
+import dao.interfaces.UserDao;
 import domain.Kweet;
 import domain.User;
 import java.util.ArrayList;

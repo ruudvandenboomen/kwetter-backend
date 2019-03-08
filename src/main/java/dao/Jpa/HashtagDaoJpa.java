@@ -3,8 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package dao;
+package dao.Jpa;
 
+import dao.DaoFacade;
+import dao.interfaces.HashtagDao;
 import domain.Hashtag;
 import domain.User;
 import java.util.List;

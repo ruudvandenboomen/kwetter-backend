@@ -5,10 +5,10 @@
  */
 package services;
 
-import dao.HashtagDao;
+import dao.interfaces.HashtagDao;
 import qualifier.JPA;
-import dao.KweetDao;
-import dao.UserDao;
+import dao.interfaces.KweetDao;
+import dao.interfaces.UserDao;
 import domain.Hashtag;
 import domain.Kweet;
 import domain.User;

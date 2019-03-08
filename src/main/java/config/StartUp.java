@@ -5,9 +5,9 @@
  */
 package config;
 
-import dao.KweetDao;
+import dao.interfaces.KweetDao;
 import qualifier.JPA;
-import dao.UserDao;
+import dao.interfaces.UserDao;
 import domain.Kweet;
 import domain.User;
 import java.util.Date;
