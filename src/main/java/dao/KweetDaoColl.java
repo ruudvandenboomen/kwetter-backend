@@ -42,4 +42,9 @@ public class KweetDaoColl implements KweetDao {
         return result;
     }
 
+    @Override
+    public Kweet findById(long id) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
 }

@@ -33,16 +33,15 @@ public class StartUp {
 
     @PostConstruct
     private void intData() {
-        User user = new User("Ruud", "Ruud@hotmail.com", new Date());
-        User user2 = new User("Henk", "Henk@hotmail.com", new Date());
+        User user = new User("Ruud", "Ruud@hotmail.com");
+        User user2 = new User("Henk", "Henk@hotmail.com");
         user.follow(user2);
+
+        Kweet kweet = new Kweet("Nice weather today!");
+        user.addKweet(kweet);
         userDoa.addUser(user);
         userDoa.addUser(user2);
-        userDoa.addUser(new User("Fred", "Fred@hotmail.com", new Date()));
-//
-//        Kweet kweet = new Kweet("Nice weather today!");
-//        user.addKweet(kweet);
-//        kweetDao.create(kweet, user);
+        userDoa.addUser(new User("Fred", "Fred@hotmail.com"));
 
     }
 

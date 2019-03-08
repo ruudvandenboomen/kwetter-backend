@@ -6,18 +6,22 @@
 package domain;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.PrePersist;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -28,11 +32,12 @@ import lombok.Setter;
 @NamedQueries({
     @NamedQuery(name = "kweet.findByContent", query = "SELECT k FROM Kweet k WHERE k.content LIKE :content"),})
 @NoArgsConstructor
+@RequiredArgsConstructor
 public class Kweet implements Serializable {
 
     @Getter
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     private Long id;
 
     @Getter
@@ -41,19 +46,25 @@ public class Kweet implements Serializable {
     private User createdBy;
 
     @Getter
-    @OneToMany()
-    private List<User> likes;
+    @Setter
+    @ManyToMany(mappedBy = "likes", cascade = CascadeType.ALL)
+    private List<User> likes = new ArrayList<>();
 
     @Getter
     @Setter
+    @ManyToMany(mappedBy = "mentions", cascade = CascadeType.ALL)
+    private List<User> mentions = new ArrayList<>();
+
+    @Getter
+    @Setter
+    @NonNull
     private String content;
 
     @Getter
     private Date postedOn;
 
-    public Kweet(String content) {
-        this.content = content;
-        this.postedOn = new Date();
+    @PrePersist
+    protected void onCreate() {
+        postedOn = new Date();
     }
-
 }

@@ -62,7 +62,6 @@ public class User implements Serializable {
 
     @Getter
     @Setter
-    @NonNull
     private Date dateOfBirth;
 
     @Getter
@@ -72,12 +71,20 @@ public class User implements Serializable {
 
     @Getter
     @Setter
-    @OneToMany(mappedBy = "createdBy", cascade = CascadeType.ALL)
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "user_likes",
+            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "kweet_id", referencedColumnName = "id")
+    )
     private List<Kweet> likes = new ArrayList<Kweet>();
 
     @Getter
     @Setter
-    @OneToMany(mappedBy = "createdBy")
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "user_mentions",
+            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "kweet_id", referencedColumnName = "id")
+    )
     private List<Kweet> mentions = new ArrayList<Kweet>();
 
     @Getter
@@ -103,10 +110,6 @@ public class User implements Serializable {
         if (kweets.contains(kweet)) {
             kweets.remove(kweet);
         }
-    }
-
-    public void addLike(Kweet kweet) {
-        likes.add(kweet);
     }
 
     public void removeLike(Kweet kweet) {

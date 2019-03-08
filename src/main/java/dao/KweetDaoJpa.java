@@ -24,12 +24,18 @@ import qualifier.JPA;
 
 @JPA
 @Stateless
-public class KweetDaoJpa implements KweetDao {
+public class KweetDaoJpa extends DaoFacade<Kweet> implements KweetDao {
 
     @PersistenceContext(unitName = "kwetterPU")
     private EntityManager em;
 
     public KweetDaoJpa() {
+        super(Kweet.class);
+    }
+
+    @Override
+    protected EntityManager getEntityManager() {
+        return em;
     }
 
     public void setEm(EntityManager em) {
@@ -52,6 +58,11 @@ public class KweetDaoJpa implements KweetDao {
         TypedQuery<Kweet> query = em.createNamedQuery("kweet.findByContent", Kweet.class);
         query.setParameter("content", "%" + content + "%");
         return query.getResultList();
+    }
+
+    @Override
+    public Kweet findById(long id) {
+        return find(id);
     }
 
 }

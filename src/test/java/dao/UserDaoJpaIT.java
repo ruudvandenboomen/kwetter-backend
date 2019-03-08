@@ -54,7 +54,7 @@ public class UserDaoJpaIT {
 
     @Test
     public void addingUserSuccessfull() {
-        User testUser = new User("Fred", "Fred@frans.nl", new Date());
+        User testUser = new User("Fred", "Fred@frans.nl");
         Integer expectedResult = 1;
         tx.begin();
         userDao.create(testUser);
@@ -65,8 +65,8 @@ public class UserDaoJpaIT {
 
     @Test(expected = PersistenceException.class)
     public void addingSameUserNameFail() {
-        User user = new User("Fred", "fred@henk.nl", new Date());
-        User user2 = new User("Fred", "fred@frans.nl", new Date());
+        User user = new User("Fred", "fred@henk.nl");
+        User user2 = new User("Fred", "fred@frans.nl");
         tx.begin();
         userDao.addUser(user);
         userDao.addUser(user2);
@@ -76,8 +76,8 @@ public class UserDaoJpaIT {
 
     @Test(expected = PersistenceException.class)
     public void addingSameEmailFail() {
-        User user = new User("Klaas", "fred@hotmail.nl", new Date());
-        User user2 = new User("Fred", "fred@hotmail.nl", new Date());
+        User user = new User("Klaas", "fred@hotmail.nl");
+        User user2 = new User("Fred", "fred@hotmail.nl");
         tx.begin();
         userDao.addUser(user);
         userDao.addUser(user2);
@@ -87,7 +87,7 @@ public class UserDaoJpaIT {
 
     @Test
     public void findUserSucceesful() {
-        User testUser = new User("Fred", "Fred@frans.nl", new Date());
+        User testUser = new User("Fred", "Fred@frans.nl");
         tx.begin();
         userDao.create(testUser);
         User foundUser = userDao.getUser("Fred");
@@ -151,8 +151,8 @@ public class UserDaoJpaIT {
 
     @Test
     public void follow() {
-        User user1 = new User("Fred", "Fred@frans.nl", new Date());
-        User user2 = new User("Henk", "Henk@frans.nl", new Date());
+        User user1 = new User("Fred", "Fred@frans.nl");
+        User user2 = new User("Henk", "Henk@frans.nl");
         user1.follow(user2);
 
         tx.begin();
@@ -171,8 +171,8 @@ public class UserDaoJpaIT {
 
     @Test
     public void unfollow() {
-        User user1 = new User("Fred", "Fred@frans.nl", new Date());
-        User user2 = new User("Henk", "Henk@frans.nl", new Date());
+        User user1 = new User("Fred", "Fred@frans.nl");
+        User user2 = new User("Henk", "Henk@frans.nl");
         user1.follow(user2);
 
         tx.begin();

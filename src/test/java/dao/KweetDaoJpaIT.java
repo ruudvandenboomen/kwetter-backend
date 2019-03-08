@@ -57,7 +57,7 @@ public class KweetDaoJpaIT {
     @Test
     public void addKweetSuccessful() {
         String content = "Hi everyone";
-        User testUser = new User("Fred", "Fred@frans.nl", new Date());
+        User testUser = new User("Fred", "Fred@frans.nl");
         Kweet kweet = new Kweet(content);
 
         testUser.addKweet(kweet);
@@ -73,7 +73,7 @@ public class KweetDaoJpaIT {
     @Test
     public void removeKweet() {
         String content = "Hi everyone";
-        User testUser = new User("Fred", "Fred@frans.nl", new Date());
+        User testUser = new User("Fred", "Fred@frans.nl");
 
         tx.begin();
         userDao.addUser(testUser);
