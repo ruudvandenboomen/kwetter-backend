@@ -16,6 +16,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
@@ -54,6 +55,15 @@ public class Kweet implements Serializable {
     @Setter
     @ManyToMany(mappedBy = "mentions", cascade = CascadeType.ALL)
     private List<User> mentions = new ArrayList<>();
+
+    @Getter
+    @Setter
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "kweet_hashtags",
+            joinColumns = @JoinColumn(name = "kweet_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "hashtag_id", referencedColumnName = "id")
+    )
+    private List<Hashtag> hashtags = new ArrayList<>();
 
     @Getter
     @Setter

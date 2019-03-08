@@ -5,9 +5,11 @@
  */
 package services;
 
+import dao.HashtagDao;
 import qualifier.JPA;
 import dao.KweetDao;
 import dao.UserDao;
+import domain.Hashtag;
 import domain.Kweet;
 import domain.User;
 import exceptions.KweetNotFoundException;
@@ -26,11 +28,15 @@ public class KweetService {
 
     @Inject
     @JPA
-    private KweetDao dao;
+    private KweetDao kweetDao;
 
     @Inject
     @JPA
     private UserDao userDao;
+
+    @Inject
+    @JPA
+    private HashtagDao hashtagDao;
 
     public void createKweet(Kweet kweet, String username) throws UserNotFoundException {
         User user = userDao.getUser(username);
@@ -38,16 +44,17 @@ public class KweetService {
             throw new UserNotFoundException();
         }
         kweet.setCreatedBy(user);
-        setMentions(kweet);
-        this.dao.create(kweet, user);
+        setMentions(kweet, regex(kweet.getContent(), "@"));
+        setHashtags(kweet, regex(kweet.getContent(), "#"));
+        this.kweetDao.create(kweet, user);
     }
 
     public List<Kweet> findByContent(String content) {
-        return this.dao.findByContent(content);
+        return this.kweetDao.findByContent(content);
     }
 
     public boolean likeKweet(long id, String username) throws UserNotFoundException, KweetNotFoundException {
-        Kweet kweet = dao.findById(id);
+        Kweet kweet = kweetDao.findById(id);
         if (kweet == null) {
             throw new KweetNotFoundException();
         }
@@ -73,22 +80,36 @@ public class KweetService {
         return user.getMentions();
     }
 
-    private void setMentions(Kweet kweet) {
-        String pattern = "\\@\\S*";
-        Pattern r = Pattern.compile(pattern);
-        Matcher m = r.matcher(kweet.getContent());
+    private List<String> regex(String content, String prefix) {
+        Pattern r = Pattern.compile("\\" + prefix + "\\S*");
+        Matcher m = r.matcher(content);
 
         List<String> names = new ArrayList<>();
         while (m.find()) {
             names.add(m.group().replace("@", ""));
         }
+        return names;
+    }
 
+    private void setMentions(Kweet kweet, List<String> names) {
         for (String name : names) {
             User user = userDao.getUser(name);
             if (user != null) {
-//                kweet.getMentions().add(user);
                 user.getMentions().add(kweet);
             }
+        }
+    }
+
+    private void setHashtags(Kweet kweet, List<String> foundTags) {
+        for (String tag : foundTags) {
+            Hashtag hashtag = hashtagDao.findHashtag(tag);
+            if (hashtag == null) {
+                hashtag = new Hashtag(tag);
+                hashtagDao.addHashtag(hashtag);
+            }
+            hashtag.setLastUsed(kweet.getPostedOn());
+            hashtag.setTimesUsed(hashtag.getTimesUsed() + 1);
+            kweet.getHashtags().add(hashtag);
         }
     }
 }

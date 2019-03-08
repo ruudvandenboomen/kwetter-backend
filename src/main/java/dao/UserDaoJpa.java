@@ -8,10 +8,11 @@ package dao;
 import qualifier.JPA;
 import domain.Kweet;
 import domain.User;
+import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.Local;
-import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.enterprise.context.Dependent;
 import javax.persistence.EntityManager;
@@ -42,7 +43,6 @@ public class UserDaoJpa extends DaoFacade<User> implements UserDao {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public User getUser(String name) {
         TypedQuery<User> query = em.createNamedQuery("user.findByName", User.class);
         query.setParameter("name", name);

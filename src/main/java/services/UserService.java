@@ -8,6 +8,7 @@ package services;
 import qualifier.JPA;
 import dao.UserDao;
 import domain.User;
+import exceptions.UserNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.EJB;
@@ -25,12 +26,22 @@ public class UserService {
         return dao.getUser(username);
     }
 
-    public List<String> getFollowers(String username) {
-        return createUserArrayResponse(dao.getUser(username).getFollowers());
+    public List<String> getFollowers(String username) throws UserNotFoundException {
+        User user = dao.getUser(username);
+        if (user != null) {
+            return createUserArrayResponse(user.getFollowers());
+        } else {
+            throw new UserNotFoundException();
+        }
     }
 
-    public List<String> getFollowing(String username) {
-        return createUserArrayResponse(dao.getUser(username).getFollowing());
+    public List<String> getFollowing(String username) throws UserNotFoundException {
+        User user = dao.getUser(username);
+        if (user != null) {
+            return createUserArrayResponse(user.getFollowing());
+        } else {
+            throw new UserNotFoundException();
+        }
     }
 
     public void addUser(User user) {
@@ -38,7 +49,7 @@ public class UserService {
     }
 
     private List<String> createUserArrayResponse(List<User> users) {
-        List<String> response = new ArrayList<String>();
+        List<String> response = new ArrayList<>();
         for (User u : users) {
             response.add(u.getUsername());
         }

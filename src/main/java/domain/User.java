@@ -67,7 +67,7 @@ public class User implements Serializable {
     @Getter
     @Setter
     @OneToMany(mappedBy = "createdBy", cascade = CascadeType.ALL)
-    private List<Kweet> kweets = new ArrayList<Kweet>();
+    private List<Kweet> kweets = new ArrayList<>();
 
     @Getter
     @Setter
@@ -76,7 +76,7 @@ public class User implements Serializable {
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "kweet_id", referencedColumnName = "id")
     )
-    private List<Kweet> likes = new ArrayList<Kweet>();
+    private List<Kweet> likes = new ArrayList<>();
 
     @Getter
     @Setter
@@ -85,7 +85,7 @@ public class User implements Serializable {
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "kweet_id", referencedColumnName = "id")
     )
-    private List<Kweet> mentions = new ArrayList<Kweet>();
+    private List<Kweet> mentions = new ArrayList<>();
 
     @Getter
     @Setter
@@ -94,12 +94,12 @@ public class User implements Serializable {
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "following_id", referencedColumnName = "id")
     )
-    private List<User> followers = new ArrayList<User>();
+    private List<User> followers = new ArrayList<>();
 
     @Getter
     @Setter
     @ManyToMany(mappedBy = "followers", cascade = CascadeType.ALL)
-    private List<User> following = new ArrayList<User>();
+    private List<User> following = new ArrayList<>();
 
     public void addKweet(Kweet kweet) {
         kweet.setCreatedBy(this);

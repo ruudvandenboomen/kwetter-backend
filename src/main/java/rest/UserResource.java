@@ -8,6 +8,7 @@ package rest;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import domain.User;
+import exceptions.UserNotFoundException;
 import io.swagger.annotations.Api;
 import java.net.URI;
 import java.util.List;
@@ -29,7 +30,6 @@ import javax.ws.rs.core.Response;
 import services.UserService;
 
 @Path("user")
-@Stateless
 @Api
 public class UserResource {
 
@@ -58,27 +58,29 @@ public class UserResource {
     }
 
     @GET
-    @Path("{name}/followers")
+    @Path("{username}/followers")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getFollowers(@PathParam("name") String name) {
-        List<String> followers = userService.getFollowers(name);
-        if (followers == null) {
+    public Response getFollowers(@PathParam("username") String username) {
+        List<String> followers;
+        try {
+            followers = userService.getFollowers(username);
+        } catch (UserNotFoundException ex) {
             throw new WebApplicationException(Response.Status.NOT_FOUND);
-        } else {
-            return Response.ok(followers).build();
         }
+        return Response.ok(followers).build();
     }
 
     @GET
     @Path("{username}/following")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getFollowing(@PathParam("username") String username) {
-        List<String> following = userService.getFollowing(username);
-        if (following == null) {
-            throw new WebApplicationException(Response.Status.BAD_REQUEST);
-        } else {
-            return Response.ok(following).build();
+        List<String> following;
+        try {
+            following = userService.getFollowing(username);
+        } catch (UserNotFoundException ex) {
+            throw new WebApplicationException(Response.Status.NOT_FOUND);
         }
+        return Response.ok(following).build();
     }
 
     @PUT

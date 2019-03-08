@@ -25,7 +25,6 @@ import javax.ws.rs.core.Response;
 import services.KweetService;
 
 @Path("kweet")
-@Stateless
 @Api
 public class KweetResource {
 
