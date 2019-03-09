@@ -9,9 +9,12 @@ import dao.DaoFacade;
 import dao.interfaces.HashtagDao;
 import domain.Hashtag;
 import domain.User;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.OrderBy;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import qualifier.JPA;
@@ -55,5 +58,16 @@ public class HashtagDaoJpa extends DaoFacade<Hashtag> implements HashtagDao {
     @Override
     public void addHashtag(Hashtag hashtag) {
         create(hashtag);
+    }
+
+    @Override
+    public List<Hashtag> getPopularHashtags() {
+        long DAY_IN_MS = 1000 * 60 * 60 * 24;
+        TypedQuery<Hashtag> query = em.createNamedQuery("hashtag.findTrendHashtags", Hashtag.class);
+        query.setParameter("startDate", new Date(System.currentTimeMillis() - (7 * DAY_IN_MS)));
+        query.setParameter("endDate", new Date());
+        query.setFirstResult(0);
+        query.setMaxResults(5);
+        return query.getResultList();
     }
 }

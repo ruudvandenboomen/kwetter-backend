@@ -16,6 +16,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OrderBy;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -24,7 +25,8 @@ import lombok.Setter;
 
 @Entity
 @NamedQueries({
-    @NamedQuery(name = "hashtag.findByName", query = "SELECT h FROM Hashtag h WHERE h.name = :name"),})
+    @NamedQuery(name = "hashtag.findByName", query = "SELECT h FROM Hashtag h WHERE h.name = :name"),
+    @NamedQuery(name = "hashtag.findTrendHashtags", query = "SELECT h FROM Hashtag h WHERE h.lastUsed >= :startDate AND h.lastUsed < :endDate ORDER BY h.timesUsed DESC, h.lastUsed DESC"),})
 @NoArgsConstructor
 @RequiredArgsConstructor
 public class Hashtag {
@@ -35,8 +37,8 @@ public class Hashtag {
     private Long id;
 
     @Getter
-    @Column(unique = true)
     @NonNull
+    @Column(unique = true)
     private String name;
 
     @Getter
@@ -48,6 +50,7 @@ public class Hashtag {
     private Date lastUsed;
 
     @Getter
+    @Setter
     @ManyToMany(mappedBy = "hashtags", cascade = CascadeType.ALL)
     private List<Kweet> kweets = new ArrayList<>();
 

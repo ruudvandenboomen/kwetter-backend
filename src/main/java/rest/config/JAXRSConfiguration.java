@@ -1,4 +1,4 @@
-package rest;
+package rest.config;
 
 import io.swagger.jaxrs.config.BeanConfig;
 import javax.ws.rs.ApplicationPath;

@@ -29,8 +29,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import services.UserService;
 
-@Path("user")
 @Api
+@Path("user")
 public class UserResource {
 
     @Inject

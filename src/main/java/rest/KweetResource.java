@@ -24,8 +24,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import services.KweetService;
 
-@Path("kweet")
 @Api
+@Path("kweet")
 public class KweetResource {
 
     @Inject

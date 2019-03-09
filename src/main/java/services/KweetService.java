@@ -15,7 +15,9 @@ import domain.User;
 import exceptions.KweetNotFoundException;
 import exceptions.UserNotFoundException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -80,18 +82,18 @@ public class KweetService {
         return user.getMentions();
     }
 
-    private List<String> regex(String content, String prefix) {
+    private Collection<String> regex(String content, String prefix) {
         Pattern r = Pattern.compile("\\" + prefix + "\\S*");
         Matcher m = r.matcher(content);
 
-        List<String> names = new ArrayList<>();
+        Collection<String> names = new HashSet<>();
         while (m.find()) {
-            names.add(m.group().replace("@", ""));
+            names.add(m.group().replace(prefix, ""));
         }
         return names;
     }
 
-    private void setMentions(Kweet kweet, List<String> names) {
+    private void setMentions(Kweet kweet, Collection<String> names) {
         for (String name : names) {
             User user = userDao.getUser(name);
             if (user != null) {
@@ -100,7 +102,7 @@ public class KweetService {
         }
     }
 
-    private void setHashtags(Kweet kweet, List<String> foundTags) {
+    private void setHashtags(Kweet kweet, Collection<String> foundTags) {
         for (String tag : foundTags) {
             Hashtag hashtag = hashtagDao.findHashtag(tag);
             if (hashtag == null) {

@@ -7,6 +7,7 @@ package dao.Coll;
 
 import dao.interfaces.HashtagDao;
 import domain.Hashtag;
+import java.util.List;
 
 public class HashtagDaoColl implements HashtagDao {
 
@@ -22,6 +23,11 @@ public class HashtagDaoColl implements HashtagDao {
 
     @Override
     public void addHashtag(Hashtag result) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public List<Hashtag> getPopularHashtags() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

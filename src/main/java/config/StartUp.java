@@ -42,7 +42,6 @@ public class StartUp {
         userDoa.addUser(user);
         userDoa.addUser(user2);
         userDoa.addUser(new User("Fred", "Fred@hotmail.com"));
-
     }
 
 }

@@ -6,6 +6,7 @@
 package dao.interfaces;
 
 import domain.Hashtag;
+import java.util.List;
 
 public interface HashtagDao {
 
@@ -14,4 +15,6 @@ public interface HashtagDao {
     void updateHashtag(Hashtag hashtag);
 
     void addHashtag(Hashtag result);
+
+    public List<Hashtag> getPopularHashtags();
 }
