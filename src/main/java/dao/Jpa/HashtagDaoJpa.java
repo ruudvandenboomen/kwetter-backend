@@ -51,11 +51,6 @@ public class HashtagDaoJpa extends DaoFacade<Hashtag> implements HashtagDao {
     }
 
     @Override
-    public void updateHashtag(Hashtag hashtag) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
     public void addHashtag(Hashtag hashtag) {
         create(hashtag);
     }

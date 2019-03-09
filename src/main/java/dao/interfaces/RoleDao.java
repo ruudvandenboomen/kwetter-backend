@@ -5,14 +5,9 @@
  */
 package dao.interfaces;
 
-import domain.Hashtag;
-import java.util.List;
+import domain.Role;
 
-public interface HashtagDao {
+public interface RoleDao {
 
-    Hashtag findHashtag(String name);
-
-    void addHashtag(Hashtag hashtag);
-
-    public List<Hashtag> getPopularHashtags();
+    void addRole(Role role);
 }

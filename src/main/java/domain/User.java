@@ -52,10 +52,6 @@ public class User implements Serializable {
 
     @Getter
     @Setter
-    private String displayName;
-
-    @Getter
-    @Setter
     @NonNull
     @Column(unique = true)
     private String email;
@@ -86,6 +82,15 @@ public class User implements Serializable {
             inverseJoinColumns = @JoinColumn(name = "kweet_id", referencedColumnName = "id")
     )
     private List<Kweet> mentions = new ArrayList<>();
+
+    @Getter
+    @Setter
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "user_roles",
+            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id")
+    )
+    private List<Role> roles = new ArrayList<>();
 
     @Getter
     @Setter

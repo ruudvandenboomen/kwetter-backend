@@ -17,7 +17,7 @@ import javax.enterprise.inject.Default;
 @Default
 public class UserDaoColl implements UserDao {
 
-    private List<User> users = new ArrayList<User>();
+    private List<User> users = new ArrayList<>();
 
     public UserDaoColl() {
     }

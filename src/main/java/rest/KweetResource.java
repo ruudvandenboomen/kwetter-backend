@@ -80,4 +80,11 @@ public class KweetResource {
         throw new WebApplicationException(Response.Status.BAD_REQUEST);
     }
 
+    @GET
+    @Path("{username}/timeline")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getUserTimeline(@PathParam("username") String username) {
+        return Response.ok(kweetService.getTimeline(username)).build();
+    }
+
 }

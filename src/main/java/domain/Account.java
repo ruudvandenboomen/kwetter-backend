@@ -6,16 +6,24 @@
 package domain;
 
 import java.util.List;
+import lombok.Getter;
+import lombok.Setter;
 
 public class Account {
 
-    private String username;
-    private String password;
-    private List<User> users;
+    @Getter
+    @Setter
+    private String displayName;
     
+    private String username;
+    
+    private String password;
+    
+    private User user;
+
     public Account(String username, String password) {
         this.username = username;
         this.password = password;
     }
-    
+
 }

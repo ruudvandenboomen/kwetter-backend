@@ -24,6 +24,7 @@ import java.util.regex.Pattern;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import util.TimelineComparator;
 
 @Stateless
 public class KweetService {
@@ -113,5 +114,22 @@ public class KweetService {
             hashtag.setTimesUsed(hashtag.getTimesUsed() + 1);
             kweet.getHashtags().add(hashtag);
         }
+    }
+
+    public List<Kweet> getTimeline(String username) {
+        List<Kweet> timeline = new ArrayList<>();
+        User user = userDao.getUser(username);
+        timeline.addAll(user.getKweets());
+        timeline.addAll(getFollowingKweets(user.getFollowing()));
+        timeline.sort(new TimelineComparator());
+        return timeline;
+    }
+
+    private List<Kweet> getFollowingKweets(List<User> following) {
+        List<Kweet> kweet = new ArrayList<>();
+        for (User user : following) {
+            kweet.addAll(user.getKweets());
+        }
+        return kweet;
     }
 }

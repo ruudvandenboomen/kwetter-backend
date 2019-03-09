@@ -39,6 +39,10 @@ public class StartUp {
 
         Kweet kweet = new Kweet("Nice weather today!");
         user.addKweet(kweet);
+        Kweet kweet2 = new Kweet("Hi you @Fred!");
+        Kweet kweet3 = new Kweet("Nice weather today! #sunny");
+        user2.addKweet(kweet2);
+        user2.addKweet(kweet3);
         userDoa.addUser(user);
         userDoa.addUser(user2);
         userDoa.addUser(new User("Fred", "Fred@hotmail.com"));

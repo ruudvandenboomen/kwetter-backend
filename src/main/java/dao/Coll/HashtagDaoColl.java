@@ -7,23 +7,30 @@ package dao.Coll;
 
 import dao.interfaces.HashtagDao;
 import domain.Hashtag;
+import java.util.ArrayList;
 import java.util.List;
 
 public class HashtagDaoColl implements HashtagDao {
 
+    private List<Hashtag> hashtags = new ArrayList<>();
+
+    public HashtagDaoColl() {
+    }
+
     @Override
     public Hashtag findHashtag(String name) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Hashtag found = null;
+        for (Hashtag hashtag : hashtags) {
+            if (hashtag.getName().equals(name)) {
+                found = hashtag;
+            }
+        }
+        return found;
     }
 
     @Override
-    public void updateHashtag(Hashtag hashtag) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void addHashtag(Hashtag result) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void addHashtag(Hashtag hashtag) {
+        hashtags.add(hashtag);
     }
 
     @Override
