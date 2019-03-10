@@ -13,10 +13,10 @@ public interface UserDao {
 
     User getUser(String name);
 
-    void addUser(User user);
+    void create(User user);
 
     int count();
 
-    void update(User user);
+    void edit(User user);
 
 }

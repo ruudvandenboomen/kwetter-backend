@@ -46,53 +46,66 @@ public class KweetDaoJpaIT {
         em = emf.createEntityManager();
         tx = em.getTransaction();
 
-        kweetDao = new KweetDaoJpa();
-        kweetDao.setEm(em);
         userDao = new UserDaoJpa();
         userDao.setEm(em);
+        kweetDao = new KweetDaoJpa();
+        kweetDao.setEm(em);
     }
 
     @After
     public void tearDown() {
     }
 
-    @Test
-    public void addKweetSuccessful() {
-        String content = "Hi everyone";
-        User testUser = new User("Fred", "Fred@frans.nl");
-        Kweet kweet = new Kweet(content);
-
-        testUser.addKweet(kweet);
-        tx.begin();
-        userDao.addUser(testUser);
-        kweetDao.create(kweet, testUser);
-        List<Kweet> kweets = kweetDao.findByContent(content);
-        tx.commit();
-
-        assertThat(kweets.get(0), is(kweet));
-    }
-
+//    @Test
+//    public void addKweetSuccessfull() {
+//        User testUser = new User("Fred", "Fred@frans.nl");
+//        Kweet kweet = new Kweet("Hi everyone");
+//        testUser.addKweet(kweet);
+//
+//        tx.begin();
+//        userDao.addUser(testUser);
+//        List<Kweet> kweets = kweetDao.findByContent(kweet.getContent());
+//        tx.commit();
+//
+//        assertThat(kweets.get(0), is(kweet));
+//    }
+    
     @Test
     public void removeKweet() {
-        String content = "Hi everyone";
         User testUser = new User("Fred", "Fred@frans.nl");
-
-        tx.begin();
-        userDao.addUser(testUser);
-        tx.commit();
-
-        Kweet kweet = new Kweet(content);
+        Kweet kweet = new Kweet("Hi everyone");
         testUser.addKweet(kweet);
 
         tx.begin();
-        kweetDao.create(kweet, testUser);
+        userDao.create(testUser);
+        tx.commit();
 
+        tx.begin();
         kweetDao.delete(kweet);
+        tx.commit();
 
-        List<Kweet> kweets = kweetDao.findByContent(content);
+        tx.begin();
+        List<Kweet> kweets = kweetDao.getUserKweets(testUser);
         tx.commit();
 
         assertThat(kweets.size(), is(0));
     }
 
+    @Test
+    public void getUserKweets() {
+        User user = new User("Fred", "Fred@frans.nl");
+        Kweet kweet = new Kweet("Nice weather today! #sunny");
+        user.addKweet(kweet);
+
+        tx.begin();
+        userDao.create(user);
+        tx.commit();
+
+        tx.begin();
+        List<Kweet> kweets = kweetDao.getUserKweets(user);
+        tx.commit();
+
+        assertThat(kweets.size(), is(1));
+        assertThat(kweets.get(0).getContent(), is(kweet.getContent()));
+    }
 }

@@ -15,9 +15,9 @@ public interface KweetDao {
 
     void delete(Kweet kweet);
 
+    Kweet find(long id);
+    
     List<Kweet> findByContent(String content);
-
-    Kweet findById(long id);
 
     List<Kweet> getUserKweets(User user);
 

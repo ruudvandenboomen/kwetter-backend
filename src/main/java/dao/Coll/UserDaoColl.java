@@ -39,7 +39,7 @@ public class UserDaoColl implements UserDao {
     }
 
     @Override
-    public void update(User user) {
+    public void edit(User user) {
         for (User u : users) {
             if (u.getId().equals(user.getId())) {
                 u = user;
@@ -48,7 +48,7 @@ public class UserDaoColl implements UserDao {
     }
 
     @Override
-    public void addUser(User user) {
+    public void create(User user) {
         users.add(user);
     }
 

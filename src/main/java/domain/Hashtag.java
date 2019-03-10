@@ -17,6 +17,8 @@ import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OrderBy;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -25,7 +27,8 @@ import lombok.Setter;
 
 @Entity
 @NamedQueries({
-    @NamedQuery(name = "hashtag.findByName", query = "SELECT h FROM Hashtag h WHERE h.name = :name"),
+    @NamedQuery(name = "hashtag.findByName", query = "SELECT h FROM Hashtag h WHERE h.name = :name")
+    ,
     @NamedQuery(name = "hashtag.findTrendHashtags", query = "SELECT h FROM Hashtag h WHERE h.lastUsed >= :startDate AND h.lastUsed < :endDate ORDER BY h.timesUsed DESC, h.lastUsed DESC"),})
 @NoArgsConstructor
 @RequiredArgsConstructor
@@ -47,6 +50,7 @@ public class Hashtag {
 
     @Getter
     @Setter
+    @Temporal(TemporalType.DATE)
     private Date lastUsed;
 
     @Getter

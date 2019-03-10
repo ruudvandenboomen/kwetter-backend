@@ -5,7 +5,6 @@
  */
 package dao.Jpa;
 
-import dao.DaoFacade;
 import dao.interfaces.UserDao;
 import qualifier.JPA;
 import domain.Kweet;
@@ -26,18 +25,12 @@ import javax.persistence.TypedQuery;
 
 @JPA
 @Stateless
-public class UserDaoJpa extends DaoFacade<User> implements UserDao {
+public class UserDaoJpa implements UserDao {
 
     @PersistenceContext(unitName = "kwetterPU")
     private EntityManager em;
 
     public UserDaoJpa() {
-        super(User.class);
-    }
-
-    @Override
-    protected EntityManager getEntityManager() {
-        return em;
     }
 
     public void setEm(EntityManager em) {
@@ -62,13 +55,13 @@ public class UserDaoJpa extends DaoFacade<User> implements UserDao {
     }
 
     @Override
-    public void update(User user) {
-        edit(user);
+    public void create(User user) {
+        em.persist(user);
     }
 
     @Override
-    public void addUser(User user) {
-        create(user);
+    public void edit(User user) {
+        em.merge(user);
     }
 
 }

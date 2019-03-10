@@ -5,7 +5,6 @@
  */
 package dao.Jpa;
 
-import dao.DaoFacade;
 import dao.interfaces.HashtagDao;
 import domain.Hashtag;
 import domain.User;
@@ -21,18 +20,12 @@ import qualifier.JPA;
 
 @JPA
 @Stateless
-public class HashtagDaoJpa extends DaoFacade<Hashtag> implements HashtagDao {
+public class HashtagDaoJpa implements HashtagDao {
 
     @PersistenceContext(unitName = "kwetterPU")
     private EntityManager em;
 
     public HashtagDaoJpa() {
-        super(Hashtag.class);
-    }
-
-    @Override
-    protected EntityManager getEntityManager() {
-        return this.em;
     }
 
     public void setEm(EntityManager em) {
@@ -51,8 +44,8 @@ public class HashtagDaoJpa extends DaoFacade<Hashtag> implements HashtagDao {
     }
 
     @Override
-    public void addHashtag(Hashtag hashtag) {
-        create(hashtag);
+    public void create(Hashtag hashtag) {
+        em.persist(hashtag);
     }
 
     @Override

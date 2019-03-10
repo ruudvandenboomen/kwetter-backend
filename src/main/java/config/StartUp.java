@@ -5,6 +5,8 @@
  */
 package config;
 
+import dao.Jpa.KweetDaoJpa;
+import dao.Jpa.UserDaoJpa;
 import dao.interfaces.KweetDao;
 import qualifier.JPA;
 import dao.interfaces.UserDao;
@@ -26,11 +28,11 @@ public class StartUp {
 
     @Inject
     @JPA
-    UserDao userDoa;
+    UserDaoJpa userDoa;
 
     @Inject
     @JPA
-    KweetDao kweetDao;
+    KweetDaoJpa kweetDao;
 
     @Inject
     KweetService kweetservice;
@@ -43,9 +45,9 @@ public class StartUp {
         User user = new User("Ruud", "Ruud@hotmail.com");
         User user2 = new User("Henk", "Henk@hotmail.com");
 
-        userDoa.addUser(user);
-        userDoa.addUser(user2);
-        userDoa.addUser(new User("Fred", "Fred@hotmail.com"));
+        userDoa.create(user);
+        userDoa.create(user2);
+        userDoa.create(new User("Fred", "Fred@hotmail.com"));
 
         try {
             kweetservice.createKweet(new Kweet("Nice weather today!"), "Ruud");

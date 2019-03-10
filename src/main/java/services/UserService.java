@@ -5,6 +5,8 @@
  */
 package services;
 
+import dao.Jpa.KweetDaoJpa;
+import dao.Jpa.UserDaoJpa;
 import dao.interfaces.KweetDao;
 import qualifier.JPA;
 import dao.interfaces.UserDao;
@@ -61,7 +63,7 @@ public class UserService {
     }
 
     public void addUser(User user) {
-        dao.addUser(user);
+        dao.create(user);
     }
 
     private List<String> createUserArrayResponse(List<User> users) {

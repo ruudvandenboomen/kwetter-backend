@@ -24,6 +24,8 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -58,11 +60,12 @@ public class User implements Serializable {
 
     @Getter
     @Setter
+    @Temporal(TemporalType.DATE)
     private Date dateOfBirth;
 
     @Getter
     @Setter
-    @OneToMany(mappedBy = "createdBy", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "createdBy", cascade = CascadeType.ALL)
     private List<Kweet> kweets = new ArrayList<>();
 
     @Getter

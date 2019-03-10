@@ -12,7 +12,7 @@ public interface HashtagDao {
 
     Hashtag findHashtag(String name);
 
-    void addHashtag(Hashtag hashtag);
+    void create(Hashtag hashtag);
 
     public List<Hashtag> getPopularHashtags();
 }

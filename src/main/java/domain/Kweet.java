@@ -23,6 +23,9 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.validation.constraints.Size;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -31,9 +34,9 @@ import lombok.Setter;
 
 @Entity
 @NamedQueries({
-    @NamedQuery(name = "kweet.findByContent", query = "SELECT k FROM Kweet k WHERE k.content LIKE :content"),
-        @NamedQuery(name = "kweet.findUserKweets", query = "SELECT k FROM Kweet k WHERE k.createdBy = :user"),
-})
+    @NamedQuery(name = "kweet.findByContent", query = "SELECT k FROM Kweet k WHERE k.content LIKE :content")
+    ,
+        @NamedQuery(name = "kweet.findUserKweets", query = "SELECT k FROM Kweet k WHERE k.createdBy = :user"),})
 @NoArgsConstructor
 @RequiredArgsConstructor
 public class Kweet implements Serializable {
@@ -45,7 +48,7 @@ public class Kweet implements Serializable {
 
     @Getter
     @Setter
-    @ManyToOne()
+    @ManyToOne
     private User createdBy;
 
     @Getter
@@ -70,9 +73,11 @@ public class Kweet implements Serializable {
     @Getter
     @Setter
     @NonNull
+    @Size(max = 140)
     private String content;
 
     @Getter
+    @Temporal(TemporalType.DATE)
     private Date postedOn;
 
     @PrePersist

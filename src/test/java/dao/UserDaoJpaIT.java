@@ -69,8 +69,8 @@ public class UserDaoJpaIT {
         User user = new User("Fred", "fred@henk.nl");
         User user2 = new User("Fred", "fred@frans.nl");
         tx.begin();
-        userDao.addUser(user);
-        userDao.addUser(user2);
+        userDao.create(user);
+        userDao.create(user2);
         tx.commit();
         assertThat(userDao.count(), is(2));
     }
@@ -80,8 +80,8 @@ public class UserDaoJpaIT {
         User user = new User("Klaas", "fred@hotmail.nl");
         User user2 = new User("Fred", "fred@hotmail.nl");
         tx.begin();
-        userDao.addUser(user);
-        userDao.addUser(user2);
+        userDao.create(user);
+        userDao.create(user2);
         tx.commit();
         assertThat(userDao.count(), is(2));
     }
@@ -96,60 +96,6 @@ public class UserDaoJpaIT {
         assertThat(testUser, is(foundUser));
     }
 
-//    @Test
-//    public void addKweetToUser() {
-//        User user = new User("Fred", "Fred@frans.nl", new Date());
-//
-//        tx.begin();
-//        userDao.addUser(user);
-//        tx.commit();
-//
-//        user.addKweet(new Kweet("Nice weather today!"));
-//
-//        tx.begin();
-//        userDao.update(user);
-//        tx.commit();
-//
-//        tx.begin();
-//        User foundUser = userDao.getUser("Fred");
-//        tx.commit();
-//
-//        assertThat(foundUser.getKweets().size(), is(1));
-//        assertThat(foundUser.getKweets().get(0).getContent(), is("Nice weather today!"));
-//    }
-    
-//    @Test
-//    public void likeKweet() {
-//        Date date = new Date();
-//        User user = new User("Fred", "Fred@frans.nl", date);
-//        User user2 = new User("Frans", "Frans@frans.nl", date);
-//
-//        tx.begin();
-//        userDao.addUser(user);
-//        userDao.addUser(user2);
-//        tx.commit();
-//
-//        Kweet kweet = new Kweet("Nice weather today!");
-//        user.addKweet(kweet);
-//
-//        tx.begin();
-//        userDao.update(user);
-//        tx.commit();
-//
-//        user2.addLike(kweet);
-//
-//        tx.begin();
-//        userDao.update(user2);
-//        tx.commit();
-//
-//        tx.begin();
-//        User foundUser = userDao.getUser("Frans");
-//        tx.commit();
-//
-//        assertThat(foundUser.getLikes().size(), is(1));
-//        assertThat(foundUser.getLikes().get(0).getContent(), is("Nice weather today!"));
-//    }
-
     @Test
     public void follow() {
         User user1 = new User("Fred", "Fred@frans.nl");
@@ -157,17 +103,17 @@ public class UserDaoJpaIT {
         user1.follow(user2);
 
         tx.begin();
-        userDao.addUser(user1);
-        userDao.addUser(user2);
+        userDao.create(user1);
+        userDao.create(user2);
         User foundUser = userDao.getUser("Fred");
         User foundUser1 = userDao.getUser("Henk");
         tx.commit();
 
-        assertThat(foundUser.getFollowers().size(), is(1));
-        assertThat(foundUser1.getFollowing().size(), is(1));
+        assertThat(foundUser.getFollowing().size(), is(1));
+        assertThat(foundUser1.getFollowers().size(), is(1));
 
-        assertThat(foundUser.getFollowers().get(0).getUsername(), is("Henk"));
-        assertThat(foundUser1.getFollowing().get(0).getUsername(), is("Fred"));
+        assertThat(foundUser.getFollowing().get(0).getUsername(), is("Henk"));
+        assertThat(foundUser1.getFollowers().get(0).getUsername(), is("Fred"));
     }
 
     @Test
@@ -177,15 +123,15 @@ public class UserDaoJpaIT {
         user1.follow(user2);
 
         tx.begin();
-        userDao.addUser(user1);
-        userDao.addUser(user2);
+        userDao.create(user1);
+        userDao.create(user2);
         tx.commit();
 
         user1.unfollow(user2);
 
         tx.begin();
-        userDao.update(user1);
-        userDao.update(user2);
+        userDao.edit(user1);
+        userDao.edit(user2);
 
         User foundUser = userDao.getUser("Fred");
         User foundUser1 = userDao.getUser("Henk");

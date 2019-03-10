@@ -5,6 +5,9 @@
  */
 package services;
 
+import dao.Jpa.HashtagDaoJpa;
+import dao.Jpa.KweetDaoJpa;
+import dao.Jpa.UserDaoJpa;
 import dao.interfaces.HashtagDao;
 import qualifier.JPA;
 import dao.interfaces.KweetDao;
@@ -59,7 +62,7 @@ public class KweetService {
     }
 
     public boolean likeKweet(long id, String username) throws UserNotFoundException, KweetNotFoundException {
-        Kweet kweet = kweetDao.findById(id);
+        Kweet kweet = kweetDao.find(id);
         if (kweet == null) {
             throw new KweetNotFoundException();
         }
@@ -110,7 +113,7 @@ public class KweetService {
             Hashtag hashtag = hashtagDao.findHashtag(tag);
             if (hashtag == null) {
                 hashtag = new Hashtag(tag);
-                hashtagDao.addHashtag(hashtag);
+                hashtagDao.create(hashtag);
             }
             hashtag.setLastUsed(kweet.getPostedOn());
             hashtag.setTimesUsed(hashtag.getTimesUsed() + 1);

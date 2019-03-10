@@ -5,7 +5,6 @@
  */
 package dao.Jpa;
 
-import dao.DaoFacade;
 import dao.interfaces.KweetDao;
 import domain.Kweet;
 import domain.User;
@@ -26,19 +25,10 @@ import qualifier.JPA;
 
 @JPA
 @Stateless
-public class KweetDaoJpa extends DaoFacade<Kweet> implements KweetDao {
+public class KweetDaoJpa implements KweetDao {
 
     @PersistenceContext(unitName = "kwetterPU")
     private EntityManager em;
-
-    public KweetDaoJpa() {
-        super(Kweet.class);
-    }
-
-    @Override
-    protected EntityManager getEntityManager() {
-        return em;
-    }
 
     public void setEm(EntityManager em) {
         this.em = em;
@@ -51,11 +41,6 @@ public class KweetDaoJpa extends DaoFacade<Kweet> implements KweetDao {
     }
 
     @Override
-    public void delete(Kweet kweet) {
-        em.remove(kweet);
-    }
-
-    @Override
     public List<Kweet> findByContent(String content) {
         TypedQuery<Kweet> query = em.createNamedQuery("kweet.findByContent", Kweet.class);
         query.setParameter("content", "%" + content + "%");
@@ -63,15 +48,20 @@ public class KweetDaoJpa extends DaoFacade<Kweet> implements KweetDao {
     }
 
     @Override
-    public Kweet findById(long id) {
-        return find(id);
-    }
-
-    @Override
     public List<Kweet> getUserKweets(User user) {
         TypedQuery<Kweet> query = em.createNamedQuery("kweet.findUserKweets", Kweet.class);
         query.setParameter("user", user);
         return query.getResultList();
+    }
+
+    @Override
+    public void delete(Kweet kweet) {
+        em.remove(kweet);
+    }
+
+    @Override
+    public Kweet find(long id) {
+        return em.find(Kweet.class, id);
     }
 
 }

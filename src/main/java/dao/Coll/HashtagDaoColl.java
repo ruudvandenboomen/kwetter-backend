@@ -29,7 +29,7 @@ public class HashtagDaoColl implements HashtagDao {
     }
 
     @Override
-    public void addHashtag(Hashtag hashtag) {
+    public void create(Hashtag hashtag) {
         hashtags.add(hashtag);
     }
 
