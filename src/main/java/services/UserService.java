@@ -5,8 +5,10 @@
  */
 package services;
 
+import dao.interfaces.KweetDao;
 import qualifier.JPA;
 import dao.interfaces.UserDao;
+import domain.views.ProfileView;
 import domain.User;
 import exceptions.UserNotFoundException;
 import java.util.ArrayList;
@@ -14,6 +16,7 @@ import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import util.KweetConverter;
 
 @Stateless
 public class UserService {
@@ -22,8 +25,21 @@ public class UserService {
     @JPA
     private UserDao dao;
 
-    public User getUser(String username) {
-        return dao.getUser(username);
+    @Inject
+    @JPA
+    private KweetDao kweetDao;
+
+    public ProfileView getProfile(String username) throws UserNotFoundException {
+        User user = dao.getUser(username);
+        if (user == null) {
+            throw new UserNotFoundException();
+        }
+        ProfileView profileView = new ProfileView();
+        profileView.setUsername(username);
+        profileView.setFollowerCount(user.getFollowers().size());
+        profileView.setFollowingCount(user.getFollowing().size());
+        profileView.setKweets(KweetConverter.convertKweets(kweetDao.getUserKweets(user)));
+        return profileView;
     }
 
     public List<String> getFollowers(String username) throws UserNotFoundException {

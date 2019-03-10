@@ -18,7 +18,6 @@ import lombok.Setter;
 
 @Entity
 @RequiredArgsConstructor
-@NoArgsConstructor
 public class Role {
 
     @Getter

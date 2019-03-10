@@ -62,7 +62,7 @@ public class User implements Serializable {
 
     @Getter
     @Setter
-    @OneToMany(mappedBy = "createdBy", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "createdBy", fetch = FetchType.LAZY)
     private List<Kweet> kweets = new ArrayList<>();
 
     @Getter

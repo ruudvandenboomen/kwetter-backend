@@ -10,11 +10,15 @@ import qualifier.JPA;
 import dao.interfaces.UserDao;
 import domain.Kweet;
 import domain.User;
+import exceptions.UserNotFoundException;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
 import javax.inject.Inject;
+import services.KweetService;
 
 @Singleton
 @Startup
@@ -28,6 +32,9 @@ public class StartUp {
     @JPA
     KweetDao kweetDao;
 
+    @Inject
+    KweetService kweetservice;
+
     public StartUp() {
     }
 
@@ -35,17 +42,18 @@ public class StartUp {
     private void intData() {
         User user = new User("Ruud", "Ruud@hotmail.com");
         User user2 = new User("Henk", "Henk@hotmail.com");
-        user.follow(user2);
 
-        Kweet kweet = new Kweet("Nice weather today!");
-        user.addKweet(kweet);
-        Kweet kweet2 = new Kweet("Hi you @Fred!");
-        Kweet kweet3 = new Kweet("Nice weather today! #sunny");
-        user2.addKweet(kweet2);
-        user2.addKweet(kweet3);
         userDoa.addUser(user);
         userDoa.addUser(user2);
         userDoa.addUser(new User("Fred", "Fred@hotmail.com"));
+
+        try {
+            kweetservice.createKweet(new Kweet("Nice weather today!"), "Ruud");
+            kweetservice.createKweet(new Kweet("Hi you @Fred !"), "Henk");
+            kweetservice.createKweet(new Kweet("Nice weather today! #sunny"), "Ruud");
+        } catch (UserNotFoundException ex) {
+            Logger.getLogger(StartUp.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
 }

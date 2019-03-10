@@ -5,13 +5,13 @@
  */
 package util;
 
-import domain.Kweet;
+import domain.views.KweetView;
 import java.util.Comparator;
 
-public class TimelineComparator implements Comparator<Kweet> {
+public class TimelineComparator implements Comparator<KweetView> {
 
     @Override
-    public int compare(Kweet t, Kweet t1) {
+    public int compare(KweetView t, KweetView t1) {
         return t.getPostedOn().compareTo(t1.getPostedOn());
     }
 

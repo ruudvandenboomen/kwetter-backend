@@ -19,4 +19,6 @@ public interface KweetDao {
 
     Kweet findById(long id);
 
+    List<Kweet> getUserKweets(User user);
+
 }

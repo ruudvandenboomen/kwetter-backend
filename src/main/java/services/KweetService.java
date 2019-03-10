@@ -12,6 +12,7 @@ import dao.interfaces.UserDao;
 import domain.Hashtag;
 import domain.Kweet;
 import domain.User;
+import domain.views.KweetView;
 import exceptions.KweetNotFoundException;
 import exceptions.UserNotFoundException;
 import java.util.ArrayList;
@@ -24,6 +25,7 @@ import java.util.regex.Pattern;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import util.KweetConverter;
 import util.TimelineComparator;
 
 @Stateless
@@ -47,9 +49,9 @@ public class KweetService {
             throw new UserNotFoundException();
         }
         kweet.setCreatedBy(user);
+        this.kweetDao.create(kweet, user);
         setMentions(kweet, regex(kweet.getContent(), "@"));
         setHashtags(kweet, regex(kweet.getContent(), "#"));
-        this.kweetDao.create(kweet, user);
     }
 
     public List<Kweet> findByContent(String content) {
@@ -75,12 +77,12 @@ public class KweetService {
         }
     }
 
-    public List<Kweet> getMentions(String username) throws UserNotFoundException {
+    public List<KweetView> getMentions(String username) throws UserNotFoundException {
         User user = userDao.getUser(username);
         if (user == null) {
             throw new UserNotFoundException();
         }
-        return user.getMentions();
+        return KweetConverter.convertKweets(user.getMentions());
     }
 
     private Collection<String> regex(String content, String prefix) {
@@ -116,11 +118,11 @@ public class KweetService {
         }
     }
 
-    public List<Kweet> getTimeline(String username) {
-        List<Kweet> timeline = new ArrayList<>();
+    public List<KweetView> getTimeline(String username) {
+        List<KweetView> timeline = new ArrayList<>();
         User user = userDao.getUser(username);
-        timeline.addAll(user.getKweets());
-        timeline.addAll(getFollowingKweets(user.getFollowing()));
+        timeline.addAll(KweetConverter.convertKweets(kweetDao.getUserKweets(user)));
+        timeline.addAll(KweetConverter.convertKweets(getFollowingKweets(user.getFollowing())));
         timeline.sort(new TimelineComparator());
         return timeline;
     }
@@ -128,7 +130,7 @@ public class KweetService {
     private List<Kweet> getFollowingKweets(List<User> following) {
         List<Kweet> kweet = new ArrayList<>();
         for (User user : following) {
-            kweet.addAll(user.getKweets());
+            kweet.addAll(kweetDao.getUserKweets(user));
         }
         return kweet;
     }

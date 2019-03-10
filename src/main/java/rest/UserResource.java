@@ -7,6 +7,7 @@ package rest;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import domain.views.ProfileView;
 import domain.User;
 import exceptions.UserNotFoundException;
 import io.swagger.annotations.Api;
@@ -49,12 +50,13 @@ public class UserResource {
     @Path("{username}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getByName(@PathParam("username") String username) {
-        User user = userService.getUser(username);
-        if (user == null) {
+        ProfileView profile = null;
+        try {
+            profile = userService.getProfile(username);
+        } catch (UserNotFoundException ex) {
             throw new WebApplicationException(Response.Status.NOT_FOUND);
-        } else {
-            return Response.ok(user).build();
         }
+        return Response.ok(profile).build();
     }
 
     @GET
