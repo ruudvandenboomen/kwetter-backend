@@ -5,19 +5,16 @@
  */
 package services;
 
-import dao.Jpa.KweetDaoJpa;
-import dao.Jpa.UserDaoJpa;
 import dao.interfaces.KweetDao;
-import qualifier.JPA;
 import dao.interfaces.UserDao;
-import domain.views.ProfileView;
 import domain.User;
+import domain.views.ProfileView;
 import exceptions.UserNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
-import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import qualifier.JPA;
 import util.KweetConverter;
 
 @Stateless
@@ -63,7 +60,10 @@ public class UserService {
     }
 
     public void addUser(User user) {
-        dao.create(user);
+        User created = dao.create(user);
+        if (created == null) {
+
+        }
     }
 
     private List<String> createUserArrayResponse(List<User> users) {

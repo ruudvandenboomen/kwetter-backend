@@ -5,21 +5,16 @@
  */
 package rest;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import domain.views.ProfileView;
 import domain.User;
+import domain.views.ProfileView;
 import exceptions.UserNotFoundException;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import java.net.URI;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
-import static javax.ws.rs.HttpMethod.PUT;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -30,7 +25,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import services.UserService;
 
-@Api
+@Api("User")
 @Path("user")
 public class UserResource {
 
@@ -40,6 +35,7 @@ public class UserResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(value = "Creates a user")
     public Response add(User user) {
         userService.addUser(user);
         URI id = URI.create(user.getUsername());
@@ -49,6 +45,7 @@ public class UserResource {
     @GET
     @Path("{username}")
     @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(value = "Retrieve a user by it's name")
     public Response getByName(@PathParam("username") String username) {
         ProfileView profile = null;
         try {
@@ -62,6 +59,7 @@ public class UserResource {
     @GET
     @Path("{username}/followers")
     @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(value = "Retrieve a user his followers by it's name")
     public Response getFollowers(@PathParam("username") String username) {
         List<String> followers;
         try {
@@ -75,6 +73,7 @@ public class UserResource {
     @GET
     @Path("{username}/following")
     @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(value = "Retrieve a user his follwing by it's name")
     public Response getFollowing(@PathParam("username") String username) {
         List<String> following;
         try {
@@ -88,6 +87,7 @@ public class UserResource {
     @PUT
     @Path("{username}/following/add/{userToFollow}")
     @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(value = "Add a follower to a user")
     public Response follow(@PathParam("username") String username, @PathParam("userToFollow") String userToFollow) {
         if (userService.addFollow(username, userToFollow)) {
             return Response.ok().build();

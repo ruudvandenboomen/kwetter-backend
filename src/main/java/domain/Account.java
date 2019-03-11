@@ -5,7 +5,6 @@
  */
 package domain;
 
-import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,11 +13,11 @@ public class Account {
     @Getter
     @Setter
     private String displayName;
-    
+
     private String username;
-    
+
     private String password;
-    
+
     private User user;
 
     public Account(String username, String password) {

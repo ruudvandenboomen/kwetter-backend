@@ -8,10 +8,8 @@ package dao;
 import dao.Jpa.HashtagDaoJpa;
 import dao.Jpa.KweetDaoJpa;
 import dao.Jpa.UserDaoJpa;
-import dao.interfaces.HashtagDao;
 import domain.Hashtag;
 import java.sql.SQLException;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.persistence.EntityManager;
@@ -21,18 +19,20 @@ import javax.persistence.Persistence;
 import static org.hamcrest.CoreMatchers.is;
 import org.junit.After;
 import static org.junit.Assert.assertThat;
-import org.junit.Before;
+import org.junit.Before; 
 import org.junit.Test;
 import util.DatabaseCleaner;
 
-public class HashtagDaoJpaIT {
+public class HashtagDaoJpaTest {
 
     EntityManagerFactory emf = Persistence.createEntityManagerFactory("kwetterTestPU");
     private EntityManager em;
     private EntityTransaction tx;
     private HashtagDaoJpa hashtagDao;
+    private UserDaoJpa userDao;
+    private KweetDaoJpa kweetDao;
 
-    public HashtagDaoJpaIT() {
+    public HashtagDaoJpaTest() {
     }
 
     @Before
@@ -40,13 +40,17 @@ public class HashtagDaoJpaIT {
         try {
             new DatabaseCleaner(emf.createEntityManager()).clean();
         } catch (SQLException ex) {
-            Logger.getLogger(UserDaoJpaIT.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(UserDaoJpaTest.class.getName()).log(Level.SEVERE, null, ex);
         }
         em = emf.createEntityManager();
         tx = em.getTransaction();
 
         hashtagDao = new HashtagDaoJpa();
         hashtagDao.setEm(em);
+        userDao = new UserDaoJpa();
+        userDao.setEm(em);
+        kweetDao = new KweetDaoJpa();
+        kweetDao.setEm(em);
     }
 
     @After
@@ -64,8 +68,4 @@ public class HashtagDaoJpaIT {
         assertThat(hashtagDao.findHashtag(hashtag.getName()).getName(), is(hashtag.getName()));
     }
 
-    @Test
-    public void getPopularHashtag() {
-        
-    }
 }

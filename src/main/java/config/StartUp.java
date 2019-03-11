@@ -5,21 +5,18 @@
  */
 package config;
 
-import dao.Jpa.KweetDaoJpa;
-import dao.Jpa.UserDaoJpa;
 import dao.interfaces.KweetDao;
-import qualifier.JPA;
 import dao.interfaces.UserDao;
 import domain.Kweet;
 import domain.User;
 import exceptions.UserNotFoundException;
-import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
 import javax.inject.Inject;
+import qualifier.JPA;
 import services.KweetService;
 
 @Singleton
@@ -28,11 +25,11 @@ public class StartUp {
 
     @Inject
     @JPA
-    UserDaoJpa userDoa;
+    UserDao userDoa;
 
     @Inject
     @JPA
-    KweetDaoJpa kweetDao;
+    KweetDao kweetDao;
 
     @Inject
     KweetService kweetservice;
@@ -45,9 +42,9 @@ public class StartUp {
         User user = new User("Ruud", "Ruud@hotmail.com");
         User user2 = new User("Henk", "Henk@hotmail.com");
 
-        userDoa.create(user);
-        userDoa.create(user2);
-        userDoa.create(new User("Fred", "Fred@hotmail.com"));
+        User u = userDoa.create(user);
+        User u1 = userDoa.create(user2);
+        User u2 = userDoa.create(new User("Fred", "Fred@hotmail.com"));
 
         try {
             kweetservice.createKweet(new Kweet("Nice weather today!"), "Ruud");

@@ -5,15 +5,13 @@
  */
 package dao.interfaces;
 
-import domain.Kweet;
 import domain.User;
-import java.util.List;
 
 public interface UserDao {
 
     User getUser(String name);
 
-    void create(User user);
+    User create(User user);
 
     int count();
 

@@ -5,60 +5,83 @@
 // */
 //package rest;
 //
-//import com.github.tomakehurst.wiremock.client.WireMock;
-//import static com.jayway.restassured.RestAssured.given;
-//import com.jayway.restassured.http.ContentType;
+//import domain.Kweet;
 //import domain.User;
-//import java.io.File;
-//import java.net.URL;
-//import org.jboss.arquillian.container.test.api.Deployment;
-//import org.jboss.arquillian.container.test.api.RunAsClient;
-//import org.jboss.arquillian.junit.Arquillian;
-//import org.jboss.arquillian.junit.InSequence;
-//import org.jboss.arquillian.test.api.ArquillianResource;
-//import org.jboss.shrinkwrap.api.ShrinkWrap;
-//import org.jboss.shrinkwrap.api.spec.WebArchive;
-//import org.jboss.shrinkwrap.resolver.api.maven.Maven;
+//import io.restassured.RestAssured;
+//import static io.restassured.RestAssured.given;
+//import static org.hamcrest.CoreMatchers.is;
+//import org.junit.Before;
 //import org.junit.Test;
-//import org.junit.runner.RunWith;
 //
-//@RunWith(Arquillian.class)
 //public class UserResourceTest {
 //
-//    private final WireMock wiremock = new WireMock(8888);
-//
-//    @Deployment(testable = false)
-//    public static WebArchive createDeployment() {
-//        File[] files = Maven.resolver()
-//                .loadPomFromFile("pom.xml")
-//                .importRuntimeDependencies()
-//                .resolve()
-//                .withTransitivity()
-//                .asFile();
-//        return ShrinkWrap.create(WebArchive.class)
-//                .addPackage("config")
-//                .addPackage("dao")
-//                .addPackage("domain")
-//                .addPackage("qualifier")
-//                .addPackage("rest")
-//                .addPackage("services")
-//                .addPackage("util")
-//                .addAsWebInfResource(new File("src/main/webapp/WEB-INF/beans.xml"))
-//                .addAsResource( new File("src/main/resources/META-INF/persistence.xml"))
-//                .addAsLibraries(files);
+//    @Before
+//    public void setUp() {
+//        RestAssured.port = 8080;
+//        RestAssured.baseURI = "http://localhost";
+//        RestAssured.basePath = "/Kwetter/api/";
 //    }
-//
-//    @ArquillianResource
-//    private URL contextPath;
 //
 //    @Test
-//    @RunAsClient
-//    @InSequence(1)
-//    public void testAddCompany(@ArquillianResource URL url) {
-//        given()
-//                .when()
-//                .get(url.toString() + "api/user/Ruud")
-//                .then()
-//                .statusCode(204);
+//    public void addUser() {
+//        User user = new User("TestUser", "TestUser@hotmail.com");
+//
+//        given().
+//                contentType("application/json").
+//                body(user).
+//                when().
+//                post("/user").
+//                then().
+//                statusCode(201);
 //    }
+//
+//    @Test
+//    public void getProfile() {
+//        given().
+//                when().
+//                get("/user/TestUser").
+//                then().
+//                statusCode(200).
+//                body(
+//                        "username", is("TestUser")
+//                );
+//    }
+//
+//    @Test
+//    public void createKweet() {
+//        Kweet kweet = new Kweet("Hoi");
+//        given().
+//                contentType("application/json").
+//                body(kweet).
+//                when().
+//                post("/kweet/TestUser").
+//                then().
+//                statusCode(200);
+//    }
+//
+//    @Test
+//    public void getTimeline() {
+//        given().
+//                when().
+//                get("/kweet/TestUser/timeline").
+//                then().
+//                statusCode(200).
+//                body(
+//                        "[0].content", is("Hoi"),
+//                        "[0].username", is("TestUser")
+//                );
+//    }
+//
+//    @Test
+//    public void getUserProfile() {
+//        given().
+//                when().
+//                get("/user/TestUser").
+//                then().
+//                statusCode(200).
+//                body(
+//                        "username", is("TestUser")
+//                );
+//    }
+//
 //}

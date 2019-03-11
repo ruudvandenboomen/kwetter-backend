@@ -6,7 +6,6 @@
 package dao.Coll;
 
 import dao.interfaces.UserDao;
-import domain.Kweet;
 import domain.User;
 import java.util.ArrayList;
 import java.util.List;
@@ -48,8 +47,9 @@ public class UserDaoColl implements UserDao {
     }
 
     @Override
-    public void create(User user) {
+    public User create(User user) {
         users.add(user);
+        return user;
     }
 
 }

@@ -6,22 +6,16 @@
 package dao.Jpa;
 
 import dao.interfaces.UserDao;
-import qualifier.JPA;
-import domain.Kweet;
 import domain.User;
-import java.sql.SQLException;
-import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
 import java.util.List;
-import javax.ejb.Local;
 import javax.ejb.Stateless;
-import javax.enterprise.context.Dependent;
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
+import qualifier.JPA;
 
 @JPA
 @Stateless
@@ -55,8 +49,13 @@ public class UserDaoJpa implements UserDao {
     }
 
     @Override
-    public void create(User user) {
-        em.persist(user);
+    public User create(User user) {
+        try {
+            em.persist(user);
+            return user;
+        } catch (PersistenceException e) {
+            return null;
+        }
     }
 
     @Override
