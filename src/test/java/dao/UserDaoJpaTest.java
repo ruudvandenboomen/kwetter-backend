@@ -17,6 +17,7 @@ import javax.persistence.Persistence;
 import javax.persistence.PersistenceException;
 import static org.hamcrest.CoreMatchers.is;
 import org.junit.After;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import org.junit.Before;
 import org.junit.Test;
@@ -28,6 +29,8 @@ public class UserDaoJpaTest {
     private EntityManager em;
     private EntityTransaction tx;
     private UserDaoJpa userDao;
+
+    User user = new User("Fred", "fred@henk.nl");
 
     public UserDaoJpaTest() {
     }
@@ -48,13 +51,8 @@ public class UserDaoJpaTest {
     }
 
     private void createDummyData() {
-        User user = new User("Fred", "fred@henk.nl");
-        User user2 = new User("Henk", "fred@frans.nl");
-        user.follow(user2);
-
         tx.begin();
         userDao.create(user);
-        userDao.create(user2);
         tx.commit();
     }
 
@@ -63,70 +61,48 @@ public class UserDaoJpaTest {
     }
 
     @Test
-    public void addingUserSuccessfull() {
-        assertThat(userDao.count(), is(2));
+    public void addAndCount() {
+        assertThat(userDao.count(), is(1));
     }
 
     @Test(expected = PersistenceException.class)
     public void addingSameUserNameFail() {
-        User user = new User("Fred", "fred@henk.nl");
+        User sameName = new User(user.getUsername(), "test@testtest.nl");
         tx.begin();
-        userDao.create(user);
+        userDao.create(sameName);
         tx.commit();
-        assertThat(userDao.count(), is(2));
+        assertThat(userDao.count(), is(1));
     }
 
     @Test(expected = PersistenceException.class)
     public void addingSameEmailFail() {
-        User user = new User("Klaas", "fred@henk.nl");
+        User sameEmail = new User("testtest", user.getEmail());
         tx.begin();
-        userDao.create(user);
+        userDao.create(sameEmail);
         tx.commit();
-        assertThat(userDao.count(), is(2));
+        assertThat(userDao.count(), is(1));
     }
 
     @Test
     public void findUserSucceesful() {
-        String username = "Fred";
-        tx.begin();
-        User foundUser = userDao.getUser(username);
-        tx.commit();
-        assertThat(foundUser.getUsername(), is(username));
+        assertNotNull(userDao.getUser(user.getUsername()));
     }
 
     @Test
-    public void follow() {
+    public void edit() {
+        String username = "Klaas";
+
         tx.begin();
-        User foundUser = userDao.getUser("Fred");
-        User foundUser1 = userDao.getUser("Henk");
+        User foundUser = userDao.getUser(user.getUsername());
         tx.commit();
 
-        assertThat(foundUser.getFollowing().size(), is(1));
-        assertThat(foundUser1.getFollowers().size(), is(1));
-
-        assertThat(foundUser.getFollowing().get(0).getUsername(), is("Henk"));
-        assertThat(foundUser1.getFollowers().get(0).getUsername(), is("Fred"));
-    }
-
-    @Test
-    public void unfollow() {
-        tx.begin();
-        User foundUser = userDao.getUser("Fred");
-        User foundUser1 = userDao.getUser("Henk");
-        tx.commit();
-
-        foundUser.unfollow(foundUser1);
+        foundUser.setUsername(username);
 
         tx.begin();
         userDao.edit(foundUser);
-        userDao.edit(foundUser1);
-
-        User foundUser2 = userDao.getUser("Fred");
-        User foundUser3 = userDao.getUser("Henk");
         tx.commit();
 
-        assertThat(foundUser2.getFollowers().size(), is(0));
-        assertThat(foundUser3.getFollowing().size(), is(0));
+        assertNotNull(userDao.getUser(username));
     }
 
 }

@@ -5,9 +5,6 @@
  */
 package services;
 
-import dao.Jpa.HashtagDaoJpa;
-import dao.Jpa.KweetDaoJpa;
-import dao.Jpa.UserDaoJpa;
 import dao.interfaces.HashtagDao;
 import qualifier.JPA;
 import dao.interfaces.KweetDao;
@@ -20,12 +17,10 @@ import exceptions.KweetNotFoundException;
 import exceptions.UserNotFoundException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import util.KweetConverter;
@@ -121,9 +116,12 @@ public class KweetService {
         }
     }
 
-    public List<KweetView> getTimeline(String username) {
+    public List<KweetView> getTimeline(String username) throws UserNotFoundException {
         List<KweetView> timeline = new ArrayList<>();
         User user = userDao.getUser(username);
+        if (user == null) {
+            throw new UserNotFoundException();
+        }
         timeline.addAll(KweetConverter.convertKweets(kweetDao.getUserKweets(user)));
         timeline.addAll(KweetConverter.convertKweets(getFollowingKweets(user.getFollowing())));
         timeline.sort(new TimelineComparator());

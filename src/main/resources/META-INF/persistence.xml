@@ -11,13 +11,12 @@
     </persistence-unit>
 
     <persistence-unit name="kwetterTestPU">
-        <class>domain.User</class>
         <class>domain.Kweet</class>
+        <class>domain.User</class>
         <class>domain.Hashtag</class>
         <class>domain.Role</class>
         <properties>
             <property name="javax.persistence.schema-generation.database.action" value="drop-and-create"/>
-            <property name="eclipselink.ddl-generation" value="drop-and-create-tables"/>
             <property name="javax.persistence.jdbc.password" value="admin"/>
             <property name="javax.persistence.jdbc.user" value="root"/>
             <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver"/>

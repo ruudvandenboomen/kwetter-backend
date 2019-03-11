@@ -34,37 +34,28 @@ import lombok.Setter;
 })
 @RequiredArgsConstructor
 @NoArgsConstructor
+@Getter
+@Setter
 public class User implements Serializable {
 
-    @Getter
     @Id
     @GeneratedValue
     private Long id;
 
-    @Getter
-    @Setter
     @NonNull
     @Column(unique = true)
     private String username;
 
-    @Getter
-    @Setter
     @NonNull
     @Column(unique = true)
     private String email;
 
-    @Getter
-    @Setter
     @Temporal(TemporalType.DATE)
     private Date dateOfBirth;
 
-    @Getter
-    @Setter
-    @OneToMany(mappedBy = "createdBy", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "createdBy")
     private List<Kweet> kweets = new ArrayList<>();
 
-    @Getter
-    @Setter
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "user_likes",
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
@@ -72,8 +63,6 @@ public class User implements Serializable {
     )
     private List<Kweet> likes = new ArrayList<>();
 
-    @Getter
-    @Setter
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "user_mentions",
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
@@ -81,8 +70,6 @@ public class User implements Serializable {
     )
     private List<Kweet> mentions = new ArrayList<>();
 
-    @Getter
-    @Setter
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
@@ -90,8 +77,6 @@ public class User implements Serializable {
     )
     private List<Role> roles = new ArrayList<>();
 
-    @Getter
-    @Setter
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "user_following",
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
@@ -99,8 +84,6 @@ public class User implements Serializable {
     )
     private List<User> followers = new ArrayList<>();
 
-    @Getter
-    @Setter
     @ManyToMany(mappedBy = "followers", cascade = CascadeType.ALL)
     private List<User> following = new ArrayList<>();
 

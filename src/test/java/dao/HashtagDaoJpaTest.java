@@ -40,7 +40,7 @@ public class HashtagDaoJpaTest {
         try {
             new DatabaseCleaner(emf.createEntityManager()).clean();
         } catch (SQLException ex) {
-            Logger.getLogger(UserDaoJpaTest.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(HashtagDaoJpaTest.class.getName()).log(Level.SEVERE, null, ex);
         }
         em = emf.createEntityManager();
         tx = em.getTransaction();

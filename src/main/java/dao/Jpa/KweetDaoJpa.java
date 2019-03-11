@@ -28,9 +28,7 @@ public class KweetDaoJpa implements KweetDao {
 
     @Override
     public void create(Kweet kweet, User user) {
-        System.out.println(kweet);
         em.persist(kweet);
-        em.merge(user);
     }
 
     @Override

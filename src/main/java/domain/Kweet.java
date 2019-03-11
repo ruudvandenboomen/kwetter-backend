@@ -11,9 +11,7 @@ import java.util.Date;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -21,7 +19,6 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -39,30 +36,23 @@ import lombok.Setter;
         @NamedQuery(name = "kweet.findUserKweets", query = "SELECT k FROM Kweet k WHERE k.createdBy = :user"),})
 @NoArgsConstructor
 @RequiredArgsConstructor
+@Getter
+@Setter
 public class Kweet implements Serializable {
 
-    @Getter
     @Id
     @GeneratedValue
     private Long id;
 
-    @Getter
-    @Setter
     @ManyToOne
     private User createdBy;
 
-    @Getter
-    @Setter
-    @ManyToMany(mappedBy = "likes", cascade = CascadeType.ALL)
+    @ManyToMany(mappedBy = "likes")
     private List<User> likes = new ArrayList<>();
 
-    @Getter
-    @Setter
-    @ManyToMany(mappedBy = "mentions", cascade = CascadeType.ALL)
+    @ManyToMany(mappedBy = "mentions")
     private List<User> mentions = new ArrayList<>();
 
-    @Getter
-    @Setter
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "kweet_hashtags",
             joinColumns = @JoinColumn(name = "kweet_id", referencedColumnName = "id"),
@@ -70,13 +60,10 @@ public class Kweet implements Serializable {
     )
     private List<Hashtag> hashtags = new ArrayList<>();
 
-    @Getter
-    @Setter
     @NonNull
     @Size(max = 140)
     private String content;
 
-    @Getter
     @Temporal(TemporalType.DATE)
     private Date postedOn;
 

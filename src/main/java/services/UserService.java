@@ -31,7 +31,7 @@ public class UserService {
     public ProfileView getProfile(String username) throws UserNotFoundException {
         User user = dao.getUser(username);
         if (user == null) {
-            throw new UserNotFoundException();
+            throw new UserNotFoundException("HUts");
         }
         ProfileView profileView = new ProfileView();
         profileView.setUsername(username);
@@ -60,10 +60,7 @@ public class UserService {
     }
 
     public void addUser(User user) {
-        User created = dao.create(user);
-        if (created == null) {
-
-        }
+        dao.create(user);
     }
 
     private List<String> createUserArrayResponse(List<User> users) {

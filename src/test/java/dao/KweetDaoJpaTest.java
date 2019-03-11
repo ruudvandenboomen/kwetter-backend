@@ -10,14 +10,18 @@ import dao.Jpa.UserDaoJpa;
 import domain.Kweet;
 import domain.User;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
+import static org.hamcrest.CoreMatchers.is;
 import org.junit.After;
+import static org.junit.Assert.assertThat;
 import org.junit.Before;
+import org.junit.Test;
 import util.DatabaseCleaner;
 
 public class KweetDaoJpaTest {
@@ -28,6 +32,9 @@ public class KweetDaoJpaTest {
     private KweetDaoJpa kweetDao;
     private UserDaoJpa userDao;
 
+    User user = new User("Fred", "Fred@fransfadfs.nl");
+    Kweet kweet = new Kweet("Nice weather today! #sunny");
+
     public KweetDaoJpaTest() {
     }
 
@@ -36,7 +43,7 @@ public class KweetDaoJpaTest {
         try {
             new DatabaseCleaner(emf.createEntityManager()).clean();
         } catch (SQLException ex) {
-            Logger.getLogger(UserDaoJpaTest.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(KweetDaoJpaTest.class.getName()).log(Level.SEVERE, null, ex);
         }
         em = emf.createEntityManager();
         tx = em.getTransaction();
@@ -49,11 +56,7 @@ public class KweetDaoJpaTest {
     }
 
     private void createDummyData() {
-        User user = new User("Fred", "Fred@frans.nl");
-        Kweet kweet = new Kweet("Nice weather today! #sunny");
         kweet.setCreatedBy(user);
-        user.getKweets().add(kweet);
-
         tx.begin();
         userDao.create(user);
         kweetDao.create(kweet, user);
@@ -64,40 +67,45 @@ public class KweetDaoJpaTest {
     public void tearDown() {
     }
 
-//    @Test
-//    public void addKweetSuccessfull() {
-//        tx.begin();
-//        User user = userDao.getUser("Fred");
-//        List<Kweet> kweets = kweetDao.getUserKweets(user);
-//        tx.commit();
-//
-//        assertThat(kweets.size(), is(1));
-//    }
+    @Test
+    public void addKweetSuccessfull() {
+        tx.begin();
+        List<Kweet> kweets = kweetDao.getUserKweets(user);
+        tx.commit();
 
-//    @Test
-//    public void findByContent() {
-//        tx.begin();
-//        List<Kweet> kweets = kweetDao.findByContent("Nice weather today! #sunny");
-//        tx.commit();
-//
-//        assertThat(kweets.size(), is(1));
-//    }
+        assertThat(kweets.size(), is(1));
+    }
 
-//    @Test
-//    public void removeKweet() {
-//        tx.begin();
-//        User user = userDao.getUser("Fred");
-//        tx.commit();
-//        
-//        tx.begin();
-//        List<Kweet> kweets = kweetDao.getUserKweets(user);
-//        kweetDao.delete(kweets.get(0));
-//        tx.commit();
-//
-//        tx.begin();
-//        List<Kweet> result = kweetDao.getUserKweets(user);
-//        tx.commit();
-//
-//        assertThat(result.size(), is(0));
-//    }
+    @Test
+    public void findByContent() {
+        tx.begin();
+        List<Kweet> kweets = kweetDao.findByContent(kweet.getContent());
+        tx.commit();
+
+        assertThat(kweets.size(), is(1));
+    }
+
+    @Test
+    public void findUserKweet() {
+        tx.begin();
+        List<Kweet> kweets = kweetDao.getUserKweets(user);
+        tx.commit();
+
+        assertThat(kweets.size(), is(1));
+    }
+
+    @Test
+    public void removeKweet() {
+        tx.begin();
+        List<Kweet> kweets = kweetDao.getUserKweets(user);
+        kweetDao.delete(kweets.get(0));
+        tx.commit();
+
+        tx.begin();
+        List<Kweet> result = kweetDao.getUserKweets(user);
+        tx.commit();
+
+        assertThat(result.size(), is(0));
+    }
+    
 }

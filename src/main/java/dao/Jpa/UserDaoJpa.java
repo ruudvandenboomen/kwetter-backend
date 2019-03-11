@@ -12,7 +12,6 @@ import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import qualifier.JPA;
@@ -50,12 +49,8 @@ public class UserDaoJpa implements UserDao {
 
     @Override
     public User create(User user) {
-        try {
-            em.persist(user);
-            return user;
-        } catch (PersistenceException e) {
-            return null;
-        }
+        em.persist(user);
+        return user;
     }
 
     @Override

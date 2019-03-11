@@ -45,13 +45,14 @@ public class UserResource {
     @GET
     @Path("{username}")
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(value = "Retrieve a user by it's name")
+    @ApiOperation(value = "Retrieve a user his profile by it's username")
     public Response getByName(@PathParam("username") String username) {
         ProfileView profile = null;
         try {
             profile = userService.getProfile(username);
         } catch (UserNotFoundException ex) {
-            throw new WebApplicationException(Response.Status.NOT_FOUND);
+            System.out.println(ex.getMessage());
+            throw new WebApplicationException(ex.getMessage(), Response.Status.NOT_FOUND);
         }
         return Response.ok(profile).build();
     }
@@ -65,7 +66,7 @@ public class UserResource {
         try {
             followers = userService.getFollowers(username);
         } catch (UserNotFoundException ex) {
-            throw new WebApplicationException(Response.Status.NOT_FOUND);
+            throw new WebApplicationException(ex.getMessage(), Response.Status.NOT_FOUND);
         }
         return Response.ok(followers).build();
     }
@@ -79,7 +80,7 @@ public class UserResource {
         try {
             following = userService.getFollowing(username);
         } catch (UserNotFoundException ex) {
-            throw new WebApplicationException(Response.Status.NOT_FOUND);
+            throw new WebApplicationException(ex.getMessage(), Response.Status.NOT_FOUND);
         }
         return Response.ok(following).build();
     }

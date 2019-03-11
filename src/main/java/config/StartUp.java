@@ -42,9 +42,9 @@ public class StartUp {
         User user = new User("Ruud", "Ruud@hotmail.com");
         User user2 = new User("Henk", "Henk@hotmail.com");
 
-        User u = userDoa.create(user);
-        User u1 = userDoa.create(user2);
-        User u2 = userDoa.create(new User("Fred", "Fred@hotmail.com"));
+        userDoa.create(user);
+        userDoa.create(user2);
+        userDoa.create(new User("Fred", "Fred@hotmail.com"));
 
         try {
             kweetservice.createKweet(new Kweet("Nice weather today!"), "Ruud");

@@ -8,10 +8,10 @@ package domain;
 import lombok.Getter;
 import lombok.Setter;
 
+@Getter
+@Setter
 public class Account {
 
-    @Getter
-    @Setter
     private String displayName;
 
     private String username;

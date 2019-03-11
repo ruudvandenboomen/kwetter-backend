@@ -6,8 +6,6 @@ import exceptions.UserNotFoundException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import java.net.URI;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -37,7 +35,7 @@ public class KweetResource {
         try {
             kweetService.createKweet(kweet, username);
         } catch (UserNotFoundException ex) {
-            Logger.getLogger(KweetResource.class.getName()).log(Level.SEVERE, null, ex);
+            throw new WebApplicationException(ex.getMessage(), Response.Status.BAD_REQUEST);
         }
         URI id = URI.create(kweet.getCreatedBy().getUsername());
         return Response.created(id).build();
@@ -59,9 +57,8 @@ public class KweetResource {
         try {
             return Response.ok(kweetService.getMentions(username)).build();
         } catch (UserNotFoundException ex) {
-            Logger.getLogger(KweetResource.class.getName()).log(Level.SEVERE, null, ex);
+            throw new WebApplicationException(ex.getMessage(), Response.Status.BAD_REQUEST);
         }
-        throw new WebApplicationException(Response.Status.BAD_REQUEST);
     }
 
     @PUT
@@ -73,10 +70,8 @@ public class KweetResource {
             if (kweetService.likeKweet(id, username)) {
                 return Response.ok().build();
             }
-        } catch (UserNotFoundException ex) {
-            throw new WebApplicationException(Response.Status.BAD_REQUEST);
-        } catch (KweetNotFoundException ex) {
-            throw new WebApplicationException(Response.Status.BAD_REQUEST);
+        } catch (UserNotFoundException | KweetNotFoundException ex) {
+            throw new WebApplicationException(ex.getMessage(), Response.Status.BAD_REQUEST);
         }
         throw new WebApplicationException(Response.Status.BAD_REQUEST);
     }
@@ -86,7 +81,11 @@ public class KweetResource {
     @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(value = "Retrieves the timeline(=his own kweets, and the kweets of people he follows) for a user")
     public Response getUserTimeline(@PathParam("username") String username) {
-        return Response.ok(kweetService.getTimeline(username)).build();
+        try {
+            return Response.ok(kweetService.getTimeline(username)).build();
+        } catch (UserNotFoundException ex) {
+            throw new WebApplicationException(ex.getMessage(), Response.Status.BAD_REQUEST);
+        }
     }
 
 }
