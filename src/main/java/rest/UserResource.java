@@ -51,7 +51,6 @@ public class UserResource {
         try {
             profile = userService.getProfile(username);
         } catch (UserNotFoundException ex) {
-            System.out.println(ex.getMessage());
             throw new WebApplicationException(ex.getMessage(), Response.Status.NOT_FOUND);
         }
         return Response.ok(profile).build();

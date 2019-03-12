@@ -1,0 +1,13 @@
+version: "3"
+services:
+    mysql:
+        image: mysql
+        ports:
+            - "3306:3307"  
+    payara:
+        image: mypayara
+        links:
+            - "mysql"
+        ports:
+            - "8080:8080"
+            - "4848:4848"

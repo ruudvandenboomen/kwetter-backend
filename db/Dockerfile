@@ -1,0 +1,6 @@
+FROM mysql:5.7.15
+
+ENV MYSQL_DATABASE=kwetter \
+    MYSQL_ROOT_PASSWORD="root"
+
+EXPOSE 3306
