@@ -52,4 +52,18 @@ public class UserDaoColl implements UserDao {
         return user;
     }
 
+    @Override
+    public List<User> getAll() {
+        return this.users;
+    }
+
+    @Override
+    public void deleteUser(User user) {
+        for (User u : users) {
+            if (u == user) {
+                users.remove(u);
+            }
+        }
+    }
+
 }

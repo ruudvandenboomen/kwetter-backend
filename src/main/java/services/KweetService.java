@@ -6,7 +6,6 @@
 package services;
 
 import dao.interfaces.HashtagDao;
-import qualifier.JPA;
 import dao.interfaces.KweetDao;
 import dao.interfaces.UserDao;
 import domain.Hashtag;
@@ -23,6 +22,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import qualifier.JPA;
 import util.KweetConverter;
 import util.TimelineComparator;
 
@@ -134,5 +134,13 @@ public class KweetService {
             kweet.addAll(kweetDao.getUserKweets(user));
         }
         return kweet;
+    }
+    
+    public List<Kweet> getUserKweets(String username) {
+        return kweetDao.getUserKweets(userDao.getUser(username));
+    }
+    
+    public void deleteKweet(Kweet kweet){
+        kweetDao.delete(kweet);
     }
 }

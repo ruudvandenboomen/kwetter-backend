@@ -58,4 +58,14 @@ public class UserDaoJpa implements UserDao {
         em.merge(user);
     }
 
+    @Override
+    public List<User> getAll() {
+        return em.createQuery("SELECT u FROM User u").getResultList();
+    }
+
+    @Override
+    public void deleteUser(User user) {
+        em.remove(user);
+    }
+
 }

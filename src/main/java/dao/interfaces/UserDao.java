@@ -6,6 +6,7 @@
 package dao.interfaces;
 
 import domain.User;
+import java.util.List;
 
 public interface UserDao {
 
@@ -17,4 +18,7 @@ public interface UserDao {
 
     void edit(User user);
 
+    List<User> getAll();
+    
+    void deleteUser(User user);
 }

@@ -19,15 +19,15 @@ import util.KweetConverter;
 
 @Stateless
 public class UserService {
-
+    
     @Inject
     @JPA
     private UserDao dao;
-
+    
     @Inject
     @JPA
     private KweetDao kweetDao;
-
+    
     public ProfileView getProfile(String username) throws UserNotFoundException {
         User user = dao.getUser(username);
         if (user == null) {
@@ -40,7 +40,7 @@ public class UserService {
         profileView.setKweets(KweetConverter.convertKweets(kweetDao.getUserKweets(user)));
         return profileView;
     }
-
+    
     public List<String> getFollowers(String username) throws UserNotFoundException {
         User user = dao.getUser(username);
         if (user != null) {
@@ -49,7 +49,7 @@ public class UserService {
             throw new UserNotFoundException();
         }
     }
-
+    
     public List<String> getFollowing(String username) throws UserNotFoundException {
         User user = dao.getUser(username);
         if (user != null) {
@@ -58,11 +58,11 @@ public class UserService {
             throw new UserNotFoundException();
         }
     }
-
+    
     public void addUser(User user) {
         dao.create(user);
     }
-
+    
     private List<String> createUserArrayResponse(List<User> users) {
         List<String> response = new ArrayList<>();
         for (User u : users) {
@@ -70,7 +70,7 @@ public class UserService {
         }
         return response;
     }
-
+    
     public boolean addFollow(String username, String userToFollow) {
         User user = dao.getUser(username);
         User user2 = dao.getUser(userToFollow);
@@ -81,4 +81,13 @@ public class UserService {
             return true;
         }
     }
+    
+    public List<User> getAll() {
+        return dao.getAll();
+    }
+    
+    public void deleteUser(User user) {
+        dao.deleteUser(dao.getUser(user.getUsername()));
+    }
 }
+

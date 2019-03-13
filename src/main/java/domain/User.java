@@ -53,7 +53,7 @@ public class User implements Serializable {
     @Temporal(TemporalType.DATE)
     private Date dateOfBirth;
 
-    @OneToMany(mappedBy = "createdBy")
+    @OneToMany(mappedBy = "createdBy", cascade = CascadeType.ALL)
     private List<Kweet> kweets = new ArrayList<>();
 
     @ManyToMany(cascade = CascadeType.ALL)
