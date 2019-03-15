@@ -5,16 +5,13 @@
  */
 package dao.interfaces;
 
-import domain.User;
-import java.util.List;
+public interface BaseDao<T> {
 
-public interface UserDao extends BaseDao<User> {
+    void create(T Object);
 
-    User getUser(String name);
+    T find(long id);
 
-    int count();
+    void edit(T Object);
 
-    List<User> getAll();
-    
-    void deleteUser(User user);
+    void delete(T Object);
 }

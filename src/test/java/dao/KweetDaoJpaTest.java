@@ -5,8 +5,8 @@
  */
 package dao;
 
-import dao.Jpa.KweetDaoJpa;
-import dao.Jpa.UserDaoJpa;
+import dao.jpa.KweetDaoJpa;
+import dao.jpa.UserDaoJpa;
 import domain.Kweet;
 import domain.User;
 import java.sql.SQLException;

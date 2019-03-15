@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package bean;
+package jsf;
 
 import domain.User;
 import java.io.Serializable;
@@ -27,7 +27,7 @@ public class AdminBean implements Serializable {
         if (filter != null && filter.length() > 0) {
             List<User> filtered = new ArrayList<>();
             for (User u : userService.getAll()) {
-                if (u.getUsername().toLowerCase().startsWith(filter.toLowerCase())) {
+                if (u.getUsername().toLowerCase().contains(filter.toLowerCase())) {
                     filtered.add(u);
                 }
             }

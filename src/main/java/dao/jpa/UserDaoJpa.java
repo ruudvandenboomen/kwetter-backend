@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package dao.Jpa;
+package dao.jpa;
 
 import dao.interfaces.UserDao;
 import domain.User;
@@ -18,12 +18,18 @@ import qualifier.JPA;
 
 @JPA
 @Stateless
-public class UserDaoJpa implements UserDao {
+public class UserDaoJpa extends BaseDaoJpa<User> implements UserDao {
 
     @PersistenceContext(unitName = "kwetterPU")
     private EntityManager em;
 
     public UserDaoJpa() {
+        super(User.class);
+    }
+
+    @Override
+    protected EntityManager getEntityManager() {
+        return this.em;
     }
 
     public void setEm(EntityManager em) {
@@ -45,17 +51,6 @@ public class UserDaoJpa implements UserDao {
     public int count() {
         Query query = em.createQuery("SELECT u FROM User u");
         return new ArrayList<>(query.getResultList()).size();
-    }
-
-    @Override
-    public User create(User user) {
-        em.persist(user);
-        return user;
-    }
-
-    @Override
-    public void edit(User user) {
-        em.merge(user);
     }
 
     @Override

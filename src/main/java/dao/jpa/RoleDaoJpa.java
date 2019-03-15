@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package dao.Jpa;
+package dao.jpa;
 
 import dao.interfaces.RoleDao;
 import domain.Role;

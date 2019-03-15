@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package dao.Coll;
+package dao.coll;
 
 import dao.interfaces.UserDao;
 import domain.User;
@@ -38,21 +38,6 @@ public class UserDaoColl implements UserDao {
     }
 
     @Override
-    public void edit(User user) {
-        for (User u : users) {
-            if (u.getId().equals(user.getId())) {
-                u = user;
-            }
-        }
-    }
-
-    @Override
-    public User create(User user) {
-        users.add(user);
-        return user;
-    }
-
-    @Override
     public List<User> getAll() {
         return this.users;
     }
@@ -64,6 +49,26 @@ public class UserDaoColl implements UserDao {
                 users.remove(u);
             }
         }
+    }
+
+    @Override
+    public void create(User Object) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public User find(long id) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void edit(User Object) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void delete(User Object) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

@@ -5,7 +5,7 @@
  */
 package dao;
 
-import dao.Jpa.UserDaoJpa;
+import dao.jpa.UserDaoJpa;
 import domain.User;
 import java.sql.SQLException;
 import java.util.logging.Level;
@@ -18,6 +18,7 @@ import javax.persistence.PersistenceException;
 import static org.hamcrest.CoreMatchers.is;
 import org.junit.After;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 import org.junit.Before;
 import org.junit.Test;
@@ -65,6 +66,11 @@ public class UserDaoJpaTest {
         assertThat(userDao.count(), is(1));
     }
 
+    @Test
+    public void getAll() {
+        assertThat(userDao.getAll().size(), is(1));
+    }
+
     @Test(expected = PersistenceException.class)
     public void addingSameUserNameFail() {
         User sameName = new User(user.getUsername(), "test@testtest.nl");
@@ -103,6 +109,20 @@ public class UserDaoJpaTest {
         tx.commit();
 
         assertNotNull(userDao.getUser(username));
+    }
+
+    @Test
+    public void deleteUser() {
+        String username = "deletableUser";
+        User deleteMe = new User(username, "delete@me.nl");
+        tx.begin();
+        userDao.create(deleteMe);
+        tx.commit();
+
+        tx.begin();
+        userDao.deleteUser(deleteMe);
+        tx.commit();
+        assertNull(userDao.getUser(username));
     }
 
 }

@@ -31,7 +31,7 @@ public class UserService {
     public ProfileView getProfile(String username) throws UserNotFoundException {
         User user = dao.getUser(username);
         if (user == null) {
-            throw new UserNotFoundException("HUts");
+            throw new UserNotFoundException("User not found");
         }
         ProfileView profileView = new ProfileView();
         profileView.setUsername(username);

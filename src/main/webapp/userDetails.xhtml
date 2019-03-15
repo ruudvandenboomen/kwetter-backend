@@ -23,7 +23,7 @@
                         <h:outputLabel value="#{kweet.content}"/>  
                     </h:column>
                     <h:column>
-                        <h:commandLink class="btn btn-danger" value="Remove" action="#{userDetailBean.deleteKweet(kweet.content)}">
+                        <h:commandLink class="btn btn-danger" value="Remove" action="#{userDetailBean.deleteKweet(kweet)}">
                             <f:ajax event="action" render="kweets"/>
                         </h:commandLink> 
                     </h:column>
