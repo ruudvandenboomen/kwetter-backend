@@ -59,7 +59,7 @@ public class KweetDaoJpaTest {
         kweet.setCreatedBy(user);
         tx.begin();
         userDao.create(user);
-        kweetDao.create(kweet, user);
+        kweetDao.create(kweet);
         tx.commit();
     }
 

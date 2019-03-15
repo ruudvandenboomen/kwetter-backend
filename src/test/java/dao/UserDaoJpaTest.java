@@ -120,7 +120,7 @@ public class UserDaoJpaTest {
         tx.commit();
 
         tx.begin();
-        userDao.deleteUser(deleteMe);
+        userDao.delete(deleteMe);
         tx.commit();
         assertNull(userDao.getUser(username));
     }

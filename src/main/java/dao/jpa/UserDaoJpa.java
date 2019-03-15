@@ -51,16 +51,11 @@ public class UserDaoJpa extends BaseDaoJpa<User> implements UserDao {
     public int count() {
         Query query = em.createQuery("SELECT u FROM User u");
         return new ArrayList<>(query.getResultList()).size();
-    }
+    } 
 
     @Override
     public List<User> getAll() {
         return em.createQuery("SELECT u FROM User u").getResultList();
-    }
-
-    @Override
-    public void deleteUser(User user) {
-        em.remove(user);
     }
 
 }

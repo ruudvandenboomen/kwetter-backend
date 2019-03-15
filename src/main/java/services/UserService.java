@@ -87,7 +87,7 @@ public class UserService {
     }
     
     public void deleteUser(User user) {
-        dao.deleteUser(dao.getUser(user.getUsername()));
+        dao.delete(dao.getUser(user.getUsername()));
     }
 }
 

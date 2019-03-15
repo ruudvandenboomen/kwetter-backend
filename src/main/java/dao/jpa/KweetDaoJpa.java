@@ -17,18 +17,22 @@ import qualifier.JPA;
 
 @JPA
 @Stateless
-public class KweetDaoJpa implements KweetDao {
+public class KweetDaoJpa extends BaseDaoJpa<Kweet> implements KweetDao {
 
     @PersistenceContext(unitName = "kwetterPU")
     private EntityManager em;
 
-    public void setEm(EntityManager em) {
-        this.em = em;
+    public KweetDaoJpa() {
+        super(Kweet.class);
     }
 
     @Override
-    public void create(Kweet kweet, User user) {
-        em.persist(kweet);
+    protected EntityManager getEntityManager() {
+        return this.em;
+    }
+
+    public void setEm(EntityManager em) {
+        this.em = em;
     }
 
     @Override
@@ -43,16 +47,6 @@ public class KweetDaoJpa implements KweetDao {
         TypedQuery<Kweet> query = em.createNamedQuery("kweet.findUserKweets", Kweet.class);
         query.setParameter("user", user);
         return query.getResultList();
-    }
-
-    @Override
-    public void delete(Kweet kweet) {
-        em.remove(kweet);
-    }
-
-    @Override
-    public Kweet find(long id) {
-        return em.find(Kweet.class, id);
     }
 
 }

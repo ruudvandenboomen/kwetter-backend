@@ -9,13 +9,7 @@ import domain.Kweet;
 import domain.User;
 import java.util.List;
 
-public interface KweetDao {
-
-    void create(Kweet kweet, User user);
-
-    void delete(Kweet kweet);
-
-    Kweet find(long id);
+public interface KweetDao extends BaseDao<Kweet> {
 
     List<Kweet> findByContent(String content);
 

@@ -23,16 +23,6 @@ public class KweetDaoColl implements KweetDao {
     }
 
     @Override
-    public void create(Kweet kweet, User user) {
-        kweets.add(kweet);
-    }
-
-    @Override
-    public void delete(Kweet kweet) {
-        kweets.remove(kweet);
-    }
-
-    @Override
     public List<Kweet> findByContent(String content) {
         List<Kweet> result = new ArrayList<>();
         for (Kweet kweet : kweets) {
@@ -44,11 +34,32 @@ public class KweetDaoColl implements KweetDao {
     }
 
     public List<Kweet> getUserKweets(User user) {
+        List<Kweet> result = new ArrayList<>();
+        for (Kweet kweet : kweets) {
+            if (kweet.getCreatedBy() == user) {
+                result.add(kweet);
+            }
+        }
+        return result;
+    }
+
+    @Override
+    public void create(Kweet Object) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public Kweet find(long id) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void edit(Kweet Object) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void delete(Kweet Object) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

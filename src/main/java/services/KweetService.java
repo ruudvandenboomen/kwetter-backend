@@ -47,7 +47,7 @@ public class KweetService {
             throw new UserNotFoundException();
         }
         kweet.setCreatedBy(user);
-        this.kweetDao.create(kweet, user);
+        this.kweetDao.create(kweet);
         setMentions(kweet, regex(kweet.getContent(), "@"));
         setHashtags(kweet, regex(kweet.getContent(), "#"));
     }

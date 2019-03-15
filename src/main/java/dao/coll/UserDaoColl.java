@@ -43,15 +43,6 @@ public class UserDaoColl implements UserDao {
     }
 
     @Override
-    public void deleteUser(User user) {
-        for (User u : users) {
-            if (u == user) {
-                users.remove(u);
-            }
-        }
-    }
-
-    @Override
     public void create(User Object) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }

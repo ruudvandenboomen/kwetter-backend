@@ -16,5 +16,4 @@ public interface UserDao extends BaseDao<User> {
 
     List<User> getAll();
     
-    void deleteUser(User user);
 }
