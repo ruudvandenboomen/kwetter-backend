@@ -7,9 +7,13 @@ package dao.jpaImpl;
 
 import dao.interfaces.RoleDao;
 import domain.Role;
+import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import qualifier.JPA;
 
+@JPA
+@Stateless
 public class RoleDaoJpa implements RoleDao {
 
     @PersistenceContext(unitName = "kwetterPU")
@@ -20,7 +24,7 @@ public class RoleDaoJpa implements RoleDao {
     }
 
     @Override
-    public void addRole(Role role) {
+    public void create(Role role) {
         em.persist(role);
     }
 

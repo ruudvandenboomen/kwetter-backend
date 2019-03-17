@@ -9,5 +9,5 @@ import domain.Role;
 
 public interface RoleDao {
 
-    void addRole(Role role);
+    void create(Role role);
 }

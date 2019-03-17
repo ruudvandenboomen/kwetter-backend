@@ -107,5 +107,5 @@ public class KweetDaoJpaTest {
 
         assertThat(result.size(), is(0));
     }
-    
+
 }

@@ -18,7 +18,7 @@ public class RoleDaoColl implements RoleDao {
     }
 
     @Override
-    public void addRole(Role role) {
+    public void create(Role role) {
         roles.add(role);
     }
 

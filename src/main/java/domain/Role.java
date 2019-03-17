@@ -13,11 +13,14 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 @Entity(name = "Role")
 @Table(name = "Role")
+@NoArgsConstructor
 @RequiredArgsConstructor
 @Getter
 @Setter
@@ -27,6 +30,7 @@ public class Role {
     @GeneratedValue
     private Long id;
 
+    @NonNull
     private String name;
 
     private String description;

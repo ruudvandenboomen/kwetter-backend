@@ -6,8 +6,10 @@
 package config;
 
 import dao.interfaces.KweetDao;
+import dao.interfaces.RoleDao;
 import dao.interfaces.UserDao;
 import domain.Kweet;
+import domain.Role;
 import domain.User;
 import exceptions.UserNotFoundException;
 import java.util.logging.Level;
@@ -32,6 +34,10 @@ public class StartUp {
     KweetDao kweetDao;
 
     @Inject
+    @JPA
+    RoleDao roleDao;
+
+    @Inject
     KweetService kweetservice;
 
     public StartUp() {
@@ -39,12 +45,23 @@ public class StartUp {
 
     @PostConstruct
     private void intData() {
+        Role userRole = new Role("user");
+        Role adminRole = new Role("admin");
+
+        roleDao.create(userRole);
+        roleDao.create(adminRole);
+
         User user = new User("Ruud", "Ruud@hotmail.com");
         User user2 = new User("Henk", "Henk@hotmail.com");
+        User user3 = new User("Fred", "Fred@hotmail.com");
+
+        user.getRoles().add(userRole);
+        user2.getRoles().add(userRole);
+        user3.getRoles().add(userRole);
 
         userDoa.create(user);
         userDoa.create(user2);
-        userDoa.create(new User("Fred", "Fred@hotmail.com"));
+        userDoa.create(user3);
 
         try {
             kweetservice.createKweet(new Kweet("Nice weather today!"), "Ruud");
