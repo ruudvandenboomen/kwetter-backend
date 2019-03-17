@@ -5,7 +5,7 @@
  */
 package dao;
 
-import dao.jpa.UserDaoJpa;
+import dao.jpaImpl.UserDaoJpa;
 import domain.User;
 import java.sql.SQLException;
 import java.util.logging.Level;

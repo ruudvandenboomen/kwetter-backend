@@ -5,9 +5,9 @@
  */
 package dao;
 
-import dao.jpa.HashtagDaoJpa;
-import dao.jpa.KweetDaoJpa;
-import dao.jpa.UserDaoJpa;
+import dao.jpaImpl.HashtagDaoJpa;
+import dao.jpaImpl.KweetDaoJpa;
+import dao.jpaImpl.UserDaoJpa;
 import domain.Hashtag;
 import java.sql.SQLException;
 import java.util.logging.Level;

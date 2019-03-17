@@ -135,12 +135,18 @@ public class KweetService {
         }
         return kweet;
     }
-    
+
     public List<Kweet> getUserKweets(String username) {
         return kweetDao.getUserKweets(userDao.getUser(username));
     }
-    
-    public void deleteKweet(Kweet kweet){
-        kweetDao.delete(kweet);
+
+    public void deleteKweet(Kweet kweet) {
+        if (kweet.getId() != null) {
+            kweetDao.delete(kweetDao.find(kweet.getId()));
+        }
+    }
+
+    public List<Kweet> getAll() {
+        return kweetDao.getAll();
     }
 }

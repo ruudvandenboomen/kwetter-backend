@@ -53,7 +53,7 @@ public class User implements Serializable {
     @Temporal(TemporalType.DATE)
     private Date dateOfBirth;
 
-    @OneToMany(mappedBy = "createdBy", orphanRemoval = true)
+    @OneToMany(mappedBy = "createdBy", cascade = CascadeType.REMOVE)
     private List<Kweet> kweets = new ArrayList<>();
 
     @ManyToMany(cascade = CascadeType.ALL)
@@ -70,21 +70,21 @@ public class User implements Serializable {
     )
     private List<Kweet> mentions = new ArrayList<>();
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany
     @JoinTable(name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id")
     )
     private List<Role> roles = new ArrayList<>();
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany
     @JoinTable(name = "user_following",
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "following_id", referencedColumnName = "id")
     )
     private List<User> followers = new ArrayList<>();
 
-    @ManyToMany(mappedBy = "followers", cascade = CascadeType.ALL)
+    @ManyToMany
     private List<User> following = new ArrayList<>();
 
     public void follow(User user) {

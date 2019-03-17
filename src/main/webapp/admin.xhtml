@@ -12,11 +12,12 @@
         <title>Admin Console</title>
     </h:head>
     <h:body class="container">
+
         <h:panelGroup>
             <h:form class="page-header">
                 <h:outputLabel value="Name Filter: "/>  
-                <h:inputText value="#{adminBean.filter}" id="filter">
-                    <f:ajax event="keyup" execute="filter" render="users"/>
+                <h:inputText value="#{adminBean.userFilter}" id="userFilter">
+                    <f:ajax event="keyup" execute="userFilter" render="users"/>
                 </h:inputText> 
             </h:form>
         </h:panelGroup>
@@ -29,11 +30,6 @@
                         <h:outputLabel value="#{user.username}"/>  
                     </h:column>
                     <h:column>
-                        <h:outputLink class="btn btn-primary" value ="userDetails.xhtml">Get Kweets
-                            <f:param name="username" value="#{user.username}"/>
-                        </h:outputLink>
-                    </h:column>
-                    <h:column>
                         <h:commandLink class="btn btn-danger" value="Remove" action="#{adminBean.deleteUser(user)}">
                             <f:ajax event="action" render="users"/>
                         </h:commandLink> 
@@ -41,5 +37,41 @@
                 </h:dataTable>
             </h:form>
         </h:panelGroup>
+
+        <h:panelGroup>
+            <h:form class="page-header">
+                <h:outputLabel value="Kweet Filter: "/>  
+                <h:inputText value="#{adminBean.kweetFilter}" id="kweetFilter">
+                    <f:ajax event="keyup" execute="kweetFilter" render="kweets"/>
+                </h:inputText> 
+            </h:form>
+        </h:panelGroup>
+
+        <h:panelGroup id="kweets">
+            <h:form class="well">
+                <h:dataTable class="table" value="#{adminBean.kweets}" var ="kweet">
+                    <h:column>
+                        <f:facet name = "header">Content</f:facet>
+                        <h:outputLabel value="#{kweet.content}"/>  
+                    </h:column>
+                    <h:column>
+                        <f:facet name = "header">Posted by</f:facet>
+                        <h:outputLabel value="#{kweet.createdBy.username}"/>  
+                    </h:column>
+                    <h:column>
+                        <f:facet name = "header">Posted on</f:facet>
+                        <h:outputLabel value="#{kweet.postedOn}">
+                            <f:convertDateTime pattern="HH:mm dd.MM.yyyy" />
+                        </h:outputLabel>  
+                    </h:column>
+                    <h:column>
+                        <h:commandLink class="btn btn-danger" value="Remove" action="#{adminBean.deleteKweet(kweet)}">
+                            <f:ajax event="action" render="kweets"/>
+                        </h:commandLink> 
+                    </h:column>
+                </h:dataTable>
+            </h:form>
+        </h:panelGroup>
+
     </h:body>
 </html>

@@ -15,4 +15,6 @@ public interface KweetDao extends BaseDao<Kweet> {
 
     List<Kweet> getUserKweets(User user);
 
+    List<Kweet> getAll();
+
 }

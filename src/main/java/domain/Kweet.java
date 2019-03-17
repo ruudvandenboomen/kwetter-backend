@@ -9,7 +9,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -52,8 +51,7 @@ public class Kweet implements Serializable {
 
     @ManyToMany(mappedBy = "mentions")
     private List<User> mentions = new ArrayList<>();
-
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany
     @JoinTable(name = "kweet_hashtags",
             joinColumns = @JoinColumn(name = "kweet_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "hashtag_id", referencedColumnName = "id")

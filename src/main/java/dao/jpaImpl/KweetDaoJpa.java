@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package dao.jpa;
+package dao.jpaImpl;
 
 import dao.interfaces.KweetDao;
 import domain.Kweet;
@@ -47,6 +47,12 @@ public class KweetDaoJpa extends BaseDaoJpa<Kweet> implements KweetDao {
         TypedQuery<Kweet> query = em.createNamedQuery("kweet.findUserKweets", Kweet.class);
         query.setParameter("user", user);
         return query.getResultList();
+    }
+
+    @Override
+    public List<Kweet> getAll() {
+        return em.createQuery("SELECT k FROM Kweet k").getResultList();
+
     }
 
 }
