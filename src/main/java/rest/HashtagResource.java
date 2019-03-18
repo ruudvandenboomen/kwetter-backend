@@ -24,7 +24,7 @@ public class HashtagResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(value = "Finds the trending hashtags")
+    @ApiOperation(value = "Find the trending hashtags")
     public Response getPopularHashtags() {
         return Response.ok(hashtagService.getPopularHashtags()).build();
     }

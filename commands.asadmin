@@ -1,3 +1,3 @@
+set configs.config.server-config.admin-service.das-config.autodeploy-enabled=true
 create-jdbc-connection-pool --datasourceclassname com.mysql.jdbc.jdbc2.optional.MysqlDataSource --restype javax.sql.DataSource --property user=root:password=root:DatabaseName=kwetter:ServerName=mysql:port=3306 kwetterPool
 create-jdbc-resource --connectionpoolid kwetterPool jdbc/kwetter
-deploy ${DEPLOY_DIR}/Kwetter.war

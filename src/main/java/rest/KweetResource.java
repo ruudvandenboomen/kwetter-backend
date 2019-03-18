@@ -30,7 +30,7 @@ public class KweetResource {
     @Path("{username}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(value = "Creates a kweet for the given user")
+    @ApiOperation(value = "Create a kweet for the given user")
     public Response add(Kweet kweet, @PathParam("username") String username) {
         try {
             kweetService.createKweet(kweet, username);
@@ -44,7 +44,7 @@ public class KweetResource {
     @GET
     @Path("{content}")
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(value = "Finds a kweet by it's content")
+    @ApiOperation(value = "Find a kweet by it's content")
     public Response findByContent(@PathParam("content") String content) {
         return Response.ok(kweetService.findByContent(content)).build();
     }
@@ -52,7 +52,7 @@ public class KweetResource {
     @GET
     @Path("{username}/mentions")
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(value = "Retrieves a the kweets in which the given user is mentioned")
+    @ApiOperation(value = "Retrieve the kweets in which the given user is mentioned")
     public Response getMentions(@PathParam("username") String username) {
         try {
             return Response.ok(kweetService.getMentions(username)).build();
@@ -64,7 +64,7 @@ public class KweetResource {
     @PUT
     @Path("{id}/like/{username}")
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(value = "Likes a kweet for the given user")
+    @ApiOperation(value = "Like a kweet for the given user")
     public Response likeKweet(@PathParam("id") long id, @PathParam("username") String username) {
         try {
             if (kweetService.likeKweet(id, username)) {
@@ -79,7 +79,7 @@ public class KweetResource {
     @GET
     @Path("{username}/timeline")
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(value = "Retrieves the timeline(=his own kweets, and the kweets of people he follows) for a user")
+    @ApiOperation(value = "Retrieve the timeline(=his own kweets, and the kweets of people he follows) for a user")
     public Response getUserTimeline(@PathParam("username") String username) {
         try {
             return Response.ok(kweetService.getTimeline(username)).build();

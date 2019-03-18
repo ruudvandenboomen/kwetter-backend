@@ -72,9 +72,12 @@ public class UserService {
         return response;
     }
 
-    public boolean addFollow(String username, String userToFollow) {
+    public boolean addFollow(String username, String userToFollow) throws UserNotFoundException {
         User user = dao.getUser(username);
         User user2 = dao.getUser(userToFollow);
+        if (user == null || user2 == null) {
+            throw new UserNotFoundException();
+        }
         if (user.getFollowing().contains(user2)) {
             return false;
         } else {
@@ -87,10 +90,23 @@ public class UserService {
         return dao.getAll();
     }
 
-    public void deleteUser(User user) {
+    public void deleteUser(User user) throws UserNotFoundException {
         User foundUser = dao.getUser(user.getUsername());
+        if (foundUser == null) {
+            throw new UserNotFoundException();
+        }
+        
         for (Kweet kweet : kweetDao.getUserKweets(foundUser)) {
             kweetDao.delete(kweet);
+        }
+        for(Kweet likedKweet: foundUser.getLikes()){
+            likedKweet.getLikes().remove(foundUser);
+        }
+        for (User following : foundUser.getFollowing()) {
+            following.getFollowers().remove(foundUser);
+        }
+        for (User follower : foundUser.getFollowers()) {
+            follower.getFollowing().remove(foundUser);
         }
         dao.delete(foundUser);
     }

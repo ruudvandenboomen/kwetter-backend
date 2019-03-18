@@ -44,6 +44,8 @@ public class User implements Serializable {
     @NonNull
     @Column(unique = true)
     private String username;
+    
+    private String passwordHash;
 
     @NonNull
     @Column(unique = true)

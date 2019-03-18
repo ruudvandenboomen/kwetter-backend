@@ -35,7 +35,7 @@ public class UserResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(value = "Creates a user")
+    @ApiOperation(value = "Create a user")
     public Response add(User user) {
         userService.addUser(user);
         URI id = URI.create(user.getUsername());
@@ -89,10 +89,14 @@ public class UserResource {
     @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(value = "Add a follower to a user")
     public Response follow(@PathParam("username") String username, @PathParam("userToFollow") String userToFollow) {
-        if (userService.addFollow(username, userToFollow)) {
-            return Response.ok().build();
-        } else {
-            throw new WebApplicationException(Response.Status.BAD_REQUEST);
+        try {
+            if (userService.addFollow(username, userToFollow)) {
+                return Response.ok().build();
+            } else {
+                throw new WebApplicationException(Response.Status.BAD_REQUEST);
+            }
+        } catch (UserNotFoundException ex) {
+            throw new WebApplicationException(ex.getMessage(), Response.Status.NOT_FOUND);
         }
     }
 }
