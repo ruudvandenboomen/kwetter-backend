@@ -12,6 +12,7 @@ import domain.Hashtag;
 import domain.Kweet;
 import domain.User;
 import domain.views.KweetView;
+import domain.views.UserListView;
 import exceptions.KweetNotFoundException;
 import exceptions.UserNotFoundException;
 import java.util.ArrayList;
@@ -148,5 +149,13 @@ public class KweetService {
 
     public List<Kweet> getAll() {
         return kweetDao.getAll();
+    }
+
+    public List<UserListView> getKweetLikes(long id) throws KweetNotFoundException {
+        Kweet kweet = kweetDao.find(id);
+        if (kweet == null) {
+            throw new KweetNotFoundException();
+        }
+        return KweetConverter.createUserListItems(kweet.getLikes());
     }
 }

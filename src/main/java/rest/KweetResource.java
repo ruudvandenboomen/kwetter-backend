@@ -77,6 +77,18 @@ public class KweetResource {
     }
 
     @GET
+    @Path("{id}/likes")
+    @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(value = "Get the users who like the given kweet")
+    public Response getKweetLikes(@PathParam("id") long id) {
+        try {
+            return Response.ok(kweetService.getKweetLikes(id)).build();
+        } catch (KweetNotFoundException ex) {
+            throw new WebApplicationException(Response.Status.BAD_REQUEST);
+        }
+    }
+
+    @GET
     @Path("{username}/timeline")
     @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(value = "Retrieve the timeline(=his own kweets, and the kweets of people he follows) for a user")

@@ -6,7 +6,6 @@
 package domain.views;
 
 import java.util.Date;
-import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -26,5 +25,5 @@ public class KweetView {
     private String profileImage;
     @Getter
     @Setter
-    private List<UserListView> likes;
+    private int likes;
 }

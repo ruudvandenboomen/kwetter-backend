@@ -46,7 +46,7 @@ public class UserResource {
     @Path("{username}")
     @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(value = "Retrieve a user his profile by it's username")
-    public Response getByName(@PathParam("username") String username) {
+    public Response getProfile(@PathParam("username") String username) {
         ProfileView profile = null;
         try {
             profile = userService.getProfile(username);

@@ -92,6 +92,7 @@ public class UserService {
 
     public void deleteUser(User user) throws UserNotFoundException {
         User foundUser = dao.getUser(user.getUsername());
+     
         if (foundUser == null) {
             throw new UserNotFoundException();
         }
@@ -108,6 +109,7 @@ public class UserService {
         for (User follower : foundUser.getFollowers()) {
             follower.getFollowing().remove(foundUser);
         }
+        
         dao.delete(foundUser);
     }
 }

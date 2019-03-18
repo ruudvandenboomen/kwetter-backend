@@ -7,9 +7,12 @@ package jsf;
 
 import domain.Kweet;
 import domain.User;
+import exceptions.UserNotFoundException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -69,7 +72,11 @@ public class AdminBean implements Serializable {
     }
 
     public void deleteUser(User user) {
-        userService.deleteUser(user);
+        try {
+            userService.deleteUser(user);
+        } catch (UserNotFoundException ex) {
+            Logger.getLogger(AdminBean.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
 }

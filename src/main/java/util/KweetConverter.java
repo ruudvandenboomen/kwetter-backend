@@ -27,11 +27,11 @@ public class KweetConverter {
         kweetView.setContent(kweet.getContent());
         kweetView.setPostedOn(kweet.getPostedOn());
         kweetView.setUsername(kweet.getCreatedBy().getUsername());
-        kweetView.setLikes(createUserListItems(kweet.getLikes()));
+        kweetView.setLikes(kweet.getLikes().size());
         return kweetView;
     }
 
-    private static List<UserListView> createUserListItems(List<User> likes) {
+    public static List<UserListView> createUserListItems(List<User> likes) {
         List<UserListView> userListViews = new ArrayList<>();
         for (User user : likes) {
             UserListView userListView = new UserListView();
