@@ -79,13 +79,17 @@ public class User implements Serializable {
     private List<Role> roles = new ArrayList<>();
 
     @ManyToMany
-    @JoinTable(name = "user_following",
+    @JoinTable(name = "user_follower",
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "following_id", referencedColumnName = "id")
+            inverseJoinColumns = @JoinColumn(name = "follower_id", referencedColumnName = "id")
     )
     private List<User> followers = new ArrayList<>();
 
     @ManyToMany
+    @JoinTable(name = "user_following",
+            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "following_id", referencedColumnName = "id")
+    )
     private List<User> following = new ArrayList<>();
 
     public void follow(User user) {

@@ -65,14 +65,18 @@ public class StartUp {
         user2.getRoles().add(userRole);
         user3.getRoles().add(userRole);
 
+        Kweet kweet = new Kweet("Nice weather today!");
+        Kweet kweet2 = new Kweet("Hi you @Fred !");
+        Kweet kweet3 = new Kweet("Nice weather today! #sunny");
+
         userDoa.create(user);
         userDoa.create(user2);
         userDoa.create(user3);
 
         try {
-            kweetservice.createKweet(new Kweet("Nice weather today!"), "Ruud");
-            kweetservice.createKweet(new Kweet("Hi you @Fred !"), "Henk");
-            kweetservice.createKweet(new Kweet("Nice weather today! #sunny"), "Ruud");
+            kweetservice.createKweet(kweet, "Ruud");
+            kweetservice.createKweet(kweet2, "Henk");
+            kweetservice.createKweet(kweet3, "Ruud");
         } catch (UserNotFoundException ex) {
             Logger.getLogger(StartUp.class.getName()).log(Level.SEVERE, null, ex);
         }

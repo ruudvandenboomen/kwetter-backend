@@ -70,6 +70,7 @@ public class KweetService {
 
         if (!user.getLikes().contains(kweet)) {
             user.getLikes().add(kweet);
+            kweet.getLikes().add(user);
             return true;
         } else {
             return false;

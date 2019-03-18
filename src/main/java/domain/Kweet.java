@@ -51,6 +51,7 @@ public class Kweet implements Serializable {
 
     @ManyToMany(mappedBy = "mentions")
     private List<User> mentions = new ArrayList<>();
+    
     @ManyToMany
     @JoinTable(name = "kweet_hashtags",
             joinColumns = @JoinColumn(name = "kweet_id", referencedColumnName = "id"),
