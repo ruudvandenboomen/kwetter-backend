@@ -8,6 +8,7 @@ import io.swagger.annotations.ApiOperation;
 import java.net.URI;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -21,6 +22,7 @@ import services.KweetService;
 
 @Api("Kweet")
 @Path("kweet")
+@Produces(MediaType.APPLICATION_JSON)
 public class KweetResource {
 
     @Inject
@@ -29,7 +31,6 @@ public class KweetResource {
     @POST
     @Path("{username}")
     @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(value = "Create a kweet for the given user")
     public Response add(Kweet kweet, @PathParam("username") String username) {
         try {
@@ -43,7 +44,6 @@ public class KweetResource {
 
     @GET
     @Path("{content}")
-    @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(value = "Find a kweet by it's content")
     public Response findByContent(@PathParam("content") String content) {
         return Response.ok(kweetService.findByContent(content)).build();
@@ -51,7 +51,6 @@ public class KweetResource {
 
     @GET
     @Path("{username}/mentions")
-    @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(value = "Retrieve the kweets in which the given user is mentioned")
     public Response getMentions(@PathParam("username") String username) {
         try {
@@ -63,7 +62,6 @@ public class KweetResource {
 
     @PUT
     @Path("{id}/like/{username}")
-    @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(value = "Like a kweet for the given user")
     public Response likeKweet(@PathParam("id") long id, @PathParam("username") String username) {
         try {
@@ -78,19 +76,29 @@ public class KweetResource {
 
     @GET
     @Path("{id}/likes")
-    @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(value = "Get the users who like the given kweet")
     public Response getKweetLikes(@PathParam("id") long id) {
         try {
             return Response.ok(kweetService.getKweetLikes(id)).build();
         } catch (KweetNotFoundException ex) {
-            throw new WebApplicationException(Response.Status.BAD_REQUEST);
+            throw new WebApplicationException(ex.getMessage(),Response.Status.BAD_REQUEST);
+        }
+    }
+
+    @DELETE
+    @Path("{id}")
+    @ApiOperation(value = "Delete kweet by id")
+    public Response deleteKweet(@PathParam("id") long id) {
+        try {
+            kweetService.deleteKweet(id);
+            return Response.ok().build();
+        } catch (KweetNotFoundException ex) {
+            throw new WebApplicationException(ex.getMessage(), Response.Status.BAD_REQUEST);
         }
     }
 
     @GET
     @Path("{username}/timeline")
-    @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(value = "Retrieve the timeline(=his own kweets, and the kweets of people he follows) for a user")
     public Response getUserTimeline(@PathParam("username") String username) {
         try {

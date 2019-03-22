@@ -159,4 +159,12 @@ public class KweetService {
         }
         return KweetConverter.createUserListItems(kweet.getLikes());
     }
+
+    public void deleteKweet(long id) throws KweetNotFoundException {
+        Kweet kweet = kweetDao.find(id);
+        if (kweet == null) {
+            throw new KweetNotFoundException();
+        }
+        kweetDao.delete(kweet);
+    }
 }

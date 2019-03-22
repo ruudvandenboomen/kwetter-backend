@@ -47,6 +47,15 @@ public class UserResource {
         return Response.created(id).build();
     }
 
+    @PUT
+    @Path("{id}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @ApiOperation(value = "Edit a user")
+    public Response edit(User user) {
+        userService.editUser(user);
+        return Response.ok().build();
+    }
+
     @GET
     @Path("{username}")
     @ApiOperation(value = "Retrieve a user his profile by it's username")
@@ -88,7 +97,7 @@ public class UserResource {
 
     @PUT
     @Path("{username}/following/add/{userToFollow}")
-    @ApiOperation(value = "Add a follower to a user")
+    @ApiOperation(value = "Let a user follow another user")
     public Response follow(@PathParam("username") String username, @PathParam("userToFollow") String userToFollow) {
         try {
             if (userService.addFollow(username, userToFollow)) {
