@@ -31,7 +31,7 @@ public class UserDaoJpaTest {
     private EntityTransaction tx;
     private UserDaoJpa userDao;
 
-    User user = new User("Fred", "fred@henk.nl");
+    User user = new User("Fred", "Test123", "fred@henk.nl");
 
     public UserDaoJpaTest() {
     }
@@ -73,7 +73,7 @@ public class UserDaoJpaTest {
 
     @Test(expected = PersistenceException.class)
     public void addingSameUserNameFail() {
-        User sameName = new User(user.getUsername(), "test@testtest.nl");
+        User sameName = new User(user.getUsername(), "Test123", "test@testtest.nl");
         tx.begin();
         userDao.create(sameName);
         tx.commit();
@@ -82,7 +82,7 @@ public class UserDaoJpaTest {
 
     @Test(expected = PersistenceException.class)
     public void addingSameEmailFail() {
-        User sameEmail = new User("testtest", user.getEmail());
+        User sameEmail = new User("testtest", "Test123", user.getEmail());
         tx.begin();
         userDao.create(sameEmail);
         tx.commit();
@@ -114,7 +114,7 @@ public class UserDaoJpaTest {
     @Test
     public void deleteUser() {
         String username = "deletableUser";
-        User deleteMe = new User(username, "delete@me.nl");
+        User deleteMe = new User(username, "Test123", "delete@me.nl");
         tx.begin();
         userDao.create(deleteMe);
         tx.commit();

@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -26,6 +27,7 @@ import services.UserService;
 
 @Named(value = "adminBean")
 @RequestScoped
+@RolesAllowed("admin")
 public class AdminBean implements Serializable {
 
     @Inject

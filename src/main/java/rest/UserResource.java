@@ -7,6 +7,7 @@ package rest;
 
 import domain.User;
 import domain.views.ProfileView;
+import exceptions.InvalidUserException;
 import exceptions.UserNotFoundException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -27,6 +28,7 @@ import services.UserService;
 
 @Api("User")
 @Path("user")
+@Produces(MediaType.APPLICATION_JSON)
 public class UserResource {
 
     @Inject
@@ -34,17 +36,19 @@ public class UserResource {
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(value = "Create a user")
     public Response add(User user) {
-        userService.addUser(user);
+        try {
+            userService.addUser(user);
+        } catch (InvalidUserException ex) {
+            throw new WebApplicationException(ex.getMessage(), Response.Status.BAD_REQUEST);
+        }
         URI id = URI.create(user.getUsername());
         return Response.created(id).build();
     }
 
     @GET
     @Path("{username}")
-    @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(value = "Retrieve a user his profile by it's username")
     public Response getProfile(@PathParam("username") String username) {
         ProfileView profile = null;
@@ -58,7 +62,6 @@ public class UserResource {
 
     @GET
     @Path("{username}/followers")
-    @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(value = "Retrieve a user his followers by it's name")
     public Response getFollowers(@PathParam("username") String username) {
         List<String> followers;
@@ -72,7 +75,6 @@ public class UserResource {
 
     @GET
     @Path("{username}/following")
-    @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(value = "Retrieve a user his follwing by it's name")
     public Response getFollowing(@PathParam("username") String username) {
         List<String> following;
@@ -86,7 +88,6 @@ public class UserResource {
 
     @PUT
     @Path("{username}/following/add/{userToFollow}")
-    @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(value = "Add a follower to a user")
     public Response follow(@PathParam("username") String username, @PathParam("userToFollow") String userToFollow) {
         try {

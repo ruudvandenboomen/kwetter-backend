@@ -16,4 +16,20 @@
     <session-config>
         <session-timeout>30</session-timeout>
     </session-config>
+    
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>Application pages</web-resource-name>
+            <url-pattern>/admin.xhtml</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>admin</role-name>
+        </auth-constraint>
+    </security-constraint>
+    <security-role>
+        <role-name>user</role-name>
+    </security-role>
+    <security-role>
+        <role-name>admin</role-name>
+    </security-role>
 </web-app>

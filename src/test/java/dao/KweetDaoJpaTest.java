@@ -32,7 +32,7 @@ public class KweetDaoJpaTest {
     private KweetDaoJpa kweetDao;
     private UserDaoJpa userDao;
 
-    User user = new User("Fred", "Fred@fransfadfs.nl");
+    User user = new User("Fred", "Test123", "Fred@fransfadfs.nl");
     Kweet kweet = new Kweet("Nice weather today! #sunny");
 
     public KweetDaoJpaTest() {

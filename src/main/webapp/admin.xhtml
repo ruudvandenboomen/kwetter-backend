@@ -14,11 +14,16 @@
         <title>Admin Console</title>
     </h:head>
     <h:body class="container">
-
+        <h:panelGroup>
+            <h:form>
+                <h:outputText   value="#{authBean.getPrincipalName()}"/>
+                <h:commandLink  action="#{authBean.doLogout()}" value="Logout"/>
+            </h:form>
+        </h:panelGroup>
         <h:panelGroup>
             <h:form class="page-header">
-                <h:outputLabel value="Name Filter: "/>
-                <h:inputText value="#{adminBean.userFilter}" id="userFilter">
+                <h:outputLabel for="userFilter" value="Name Filter: "/>
+                <h:inputText class="form-control" value="#{adminBean.userFilter}" id="userFilter">
                     <f:ajax event="keyup" execute="userFilter" render="users"/>
                 </h:inputText>
             </h:form>
@@ -40,7 +45,7 @@
                     <h:column>
                         <f:facet name="header">Assign roles</f:facet>
                         <ui:repeat value="#{adminBean.availableUserRoles.get(user)}" var="role">
-                            <h:commandButton value="Add #{role} role" class="btn" action="#{adminBean.addRole(user, role)}" ></h:commandButton>
+                            <h:commandButton value="Add #{role} role" class="btn btn-primary" action="#{adminBean.addRole(user, role)}" ></h:commandButton>
                         </ui:repeat>
                     </h:column>
                     <h:column>
@@ -54,8 +59,8 @@
 
         <h:panelGroup>
             <h:form class="page-header">
-                <h:outputLabel value="Kweet Filter: "/>
-                <h:inputText value="#{adminBean.kweetFilter}" id="kweetFilter">
+                <h:outputLabel for="kweetFilter" value="Kweet Filter: "/>
+                <h:inputText class="form-control input-group-sm" value="#{adminBean.kweetFilter}" id="kweetFilter">
                     <f:ajax event="keyup" execute="kweetFilter" render="kweets"/>
                 </h:inputText>
             </h:form>

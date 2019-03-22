@@ -1,20 +1,31 @@
-<?xml version="1.0" encoding="windows-1252"?>
-<!--
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
--->
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
-    <head>
-        <title>TODO supply a title</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    </head>
-    <body>
-        <form action="j_security_check" method="post">
-            <input name="j_username" type="text"/>
-            <input name="j_password" type="password"/>
-            <input type="submit"/>
-        </form>
-    </body>
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"/>
+        <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"/>
+        <title>Login</title>
+    </h:head>
+    <h:body>
+        <p:outputPanel>
+            <div class="ui-g">
+                <div class="ui-g-4"/>
+                <div class="ui-g-4">
+                    <h:panelGrid style="margin: 0 auto;" columns="2">
+                        <form  method="POST" action="j_security_check">
+                            <label for="email">Username:</label> 
+                            <input class="form-control" id="email" type="text" name="j_username" /><br/>
+                            <label for="pwd">Password:</label> 
+                            <input class="form-control" id="pwd" type="password" name="j_password" /><br/>
+                            <input class="btn btn-primary" type="submit" value="Login" />
+                            <input class="btn" type="reset" value="Reset" />
+                        </form>
+                    </h:panelGrid>
+                </div>
+            </div>
+        </p:outputPanel>
+    </h:body>
 </html>
+

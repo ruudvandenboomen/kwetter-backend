@@ -17,16 +17,30 @@ import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
+import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.security.enterprise.authentication.mechanism.http.FormAuthenticationMechanismDefinition;
 import javax.security.enterprise.authentication.mechanism.http.LoginToContinue;
+import javax.security.enterprise.identitystore.DatabaseIdentityStoreDefinition;
+import javax.security.enterprise.identitystore.PasswordHash;
+import javax.security.enterprise.identitystore.Pbkdf2PasswordHash;
 import qualifier.JPA;
 import services.KweetService;
 
+@DatabaseIdentityStoreDefinition(
+        dataSourceLookup = "${'jdbc/kwetter'}",
+        callerQuery = "#{'select password from user where email = ?'}",
+        groupsQuery = "select r.name from role r, user u, user_roles ur where u.email = ? AND u.id = ur.user_id AND r.id = ur.role_id",
+        hashAlgorithm = PasswordHash.class,
+        priority = 10
+)
 @FormAuthenticationMechanismDefinition(
         loginToContinue = @LoginToContinue(
-                loginPage = "/login.html",
-                errorPage = "/login-error.html"))
+                loginPage = "/login.xhtml",
+                errorPage = "/login-error.xhtml"))
+@ApplicationScoped
+@Named
 @Singleton
 @Startup
 public class StartUp {
@@ -46,6 +60,9 @@ public class StartUp {
     @Inject
     KweetService kweetservice;
 
+    @Inject
+    Pbkdf2PasswordHash pbkdf2Hash;
+
     public StartUp() {
     }
 
@@ -54,18 +71,14 @@ public class StartUp {
         Role userRole = new Role("user");
         Role adminRole = new Role("admin");
 
-        User user = new User("Ruud", "Ruud@hotmail.com");
-        User user2 = new User("Henk", "Henk@hotmail.com");
-        User user3 = new User("Fred", "Fred@hotmail.com");
-
-        userRole.getUsers().add(user);
-        userRole.getUsers().add(user2);
-        userRole.getUsers().add(user3);
+        User user = new User("Ruud", pbkdf2Hash.generate("Test123".toCharArray()), "Ruud@hotmail.com");
+        User user2 = new User("Henk", pbkdf2Hash.generate("Test123".toCharArray()), "Henk@hotmail.com");
+        User user3 = new User("Fred", pbkdf2Hash.generate("Test123".toCharArray()), "Fred@hotmail.com");
 
         roleDao.create(userRole);
         roleDao.create(adminRole);
 
-        user.getRoles().add(userRole);
+        user.getRoles().add(adminRole);
         user2.getRoles().add(userRole);
         user3.getRoles().add(userRole);
 
