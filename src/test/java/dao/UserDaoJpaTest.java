@@ -91,7 +91,7 @@ public class UserDaoJpaTest {
 
     @Test
     public void findUserSucceesful() {
-        assertNotNull(userDao.getUser(user.getUsername()));
+        assertNotNull(userDao.find(user.getUsername()));
     }
 
     @Test
@@ -99,7 +99,7 @@ public class UserDaoJpaTest {
         String username = "Klaas";
 
         tx.begin();
-        User foundUser = userDao.getUser(user.getUsername());
+        User foundUser = userDao.find(user.getUsername());
         tx.commit();
 
         foundUser.setUsername(username);
@@ -108,7 +108,7 @@ public class UserDaoJpaTest {
         userDao.edit(foundUser);
         tx.commit();
 
-        assertNotNull(userDao.getUser(username));
+        assertNotNull(userDao.find(username));
     }
 
     @Test
@@ -122,7 +122,7 @@ public class UserDaoJpaTest {
         tx.begin();
         userDao.delete(deleteMe);
         tx.commit();
-        assertNull(userDao.getUser(username));
+        assertNull(userDao.find(username));
     }
 
 }

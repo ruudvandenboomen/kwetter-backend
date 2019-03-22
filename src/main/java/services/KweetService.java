@@ -43,7 +43,7 @@ public class KweetService {
     private HashtagDao hashtagDao;
 
     public void createKweet(Kweet kweet, String username) throws UserNotFoundException {
-        User user = userDao.getUser(username);
+        User user = userDao.find(username);
         if (user == null) {
             throw new UserNotFoundException();
         }
@@ -63,7 +63,7 @@ public class KweetService {
             throw new KweetNotFoundException();
         }
 
-        User user = userDao.getUser(username);
+        User user = userDao.find(username);
         if (user == null) {
             throw new UserNotFoundException();
         }
@@ -78,7 +78,7 @@ public class KweetService {
     }
 
     public List<KweetView> getMentions(String username) throws UserNotFoundException {
-        User user = userDao.getUser(username);
+        User user = userDao.find(username);
         if (user == null) {
             throw new UserNotFoundException();
         }
@@ -98,7 +98,7 @@ public class KweetService {
 
     private void setMentions(Kweet kweet, Collection<String> names) {
         for (String name : names) {
-            User user = userDao.getUser(name);
+            User user = userDao.find(name);
             if (user != null) {
                 user.getMentions().add(kweet);
             }
@@ -120,7 +120,7 @@ public class KweetService {
 
     public List<KweetView> getTimeline(String username) throws UserNotFoundException {
         List<KweetView> timeline = new ArrayList<>();
-        User user = userDao.getUser(username);
+        User user = userDao.find(username);
         if (user == null) {
             throw new UserNotFoundException();
         }
@@ -139,7 +139,7 @@ public class KweetService {
     }
 
     public List<Kweet> getUserKweets(String username) {
-        return kweetDao.getUserKweets(userDao.getUser(username));
+        return kweetDao.getUserKweets(userDao.find(username));
     }
 
     public void deleteKweet(Kweet kweet) {

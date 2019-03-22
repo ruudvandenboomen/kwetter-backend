@@ -7,11 +7,8 @@ package domain;
 
 import java.util.ArrayList;
 import java.util.List;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.ManyToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -20,6 +17,9 @@ import lombok.Setter;
 
 @Entity(name = "Role")
 @Table(name = "Role")
+@NamedQueries({
+        @NamedQuery(name = "role.findByName", query = "SELECT r FROM Role r WHERE r.name = :name")
+})
 @NoArgsConstructor
 @RequiredArgsConstructor
 @Getter

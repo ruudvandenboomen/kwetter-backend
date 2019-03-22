@@ -54,12 +54,16 @@ public class StartUp {
         Role userRole = new Role("user");
         Role adminRole = new Role("admin");
 
-        roleDao.create(userRole);
-        roleDao.create(adminRole);
-
         User user = new User("Ruud", "Ruud@hotmail.com");
         User user2 = new User("Henk", "Henk@hotmail.com");
         User user3 = new User("Fred", "Fred@hotmail.com");
+
+        userRole.getUsers().add(user);
+        userRole.getUsers().add(user2);
+        userRole.getUsers().add(user3);
+
+        roleDao.create(userRole);
+        roleDao.create(adminRole);
 
         user.getRoles().add(userRole);
         user2.getRoles().add(userRole);

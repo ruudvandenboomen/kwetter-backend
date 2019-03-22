@@ -17,7 +17,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(Arquillian.class)
-public class UserResourceTest {
+public class ResourceTest {
 
     private final User testUser = new User("TestUser", "TestUser@hotmail.com");
     private final User testUser2 = new User("TestUser2", "TestUser2@hotmail.com");

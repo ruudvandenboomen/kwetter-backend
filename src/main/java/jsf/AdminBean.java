@@ -6,11 +6,14 @@
 package jsf;
 
 import domain.Kweet;
+import domain.Role;
 import domain.User;
 import exceptions.UserNotFoundException;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.enterprise.context.RequestScoped;
@@ -34,23 +37,28 @@ public class AdminBean implements Serializable {
     @Getter
     @Setter
     private String userFilter;
-    
+
     @Getter
     @Setter
     private String kweetFilter;
 
+    @Getter
+    private final Map<User, List<String>> availableUserRoles = new HashMap<>();
+
     public List<User> getUsers() {
+        List<User> users = new ArrayList<>();
         if (userFilter != null && userFilter.length() > 0) {
-            List<User> filtered = new ArrayList<>();
             for (User u : userService.getAll()) {
                 if (u.getUsername().toLowerCase().contains(userFilter.toLowerCase())) {
-                    filtered.add(u);
+                    users.add(u);
                 }
             }
-            return filtered;
+            return users;
         } else {
-            return userService.getAll();
+            users = userService.getAll();
         }
+        users.forEach(u -> availableRoles(u));
+        return users;
     }
 
     public List<Kweet> getKweets() {
@@ -79,4 +87,23 @@ public class AdminBean implements Serializable {
         }
     }
 
+    public void addRole(User user, String role) {
+        try {
+            if (role != null && !role.equals("")) {
+                userService.assignRole(user, role);
+            }
+        } catch (UserNotFoundException ex) {
+            Logger.getLogger(AdminBean.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void availableRoles(User user) {
+        List<String> roles = new ArrayList<>();
+        for (Role role : userService.getAllRoles()) {
+            if (!user.getRoles().stream().anyMatch(o -> o.getName().equals(role.getName()))) {
+                roles.add(role.getName());
+            }
+        }
+        availableUserRoles.put(user, roles);
+    }
 }

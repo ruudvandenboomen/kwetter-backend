@@ -1,45 +1,52 @@
 <?xml version='1.0' encoding='UTF-8' ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:f="http://java.sun.com/jsf/core">
     <h:head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js" />
-        <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" />
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"/>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"/>
+        <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"/>
         <title>Admin Console</title>
     </h:head>
     <h:body class="container">
 
         <h:panelGroup>
             <h:form class="page-header">
-                <h:outputLabel value="Name Filter: "/>  
+                <h:outputLabel value="Name Filter: "/>
                 <h:inputText value="#{adminBean.userFilter}" id="userFilter">
                     <f:ajax event="keyup" execute="userFilter" render="users"/>
-                </h:inputText> 
+                </h:inputText>
             </h:form>
         </h:panelGroup>
 
         <h:panelGroup id="users">
             <h:form class="well">
-                <h:dataTable class="table" value="#{adminBean.users}" var ="user">
+                <h:dataTable class="table" value="#{adminBean.users}" var="user">
                     <h:column>
-                        <f:facet name = "header">Name</f:facet>
-                        <h:outputLabel value="#{user.username}"/>  
+                        <f:facet name="header">Name</f:facet>
+                        <h:outputLabel value="#{user.username}"/>
                     </h:column>
                     <h:column>
-                        <f:facet name = "header">Role</f:facet>
+                        <f:facet name="header">Roles</f:facet>
                         <ui:repeat value="#{user.roles}" var="role">
-                            <h:outputLabel value="#{role.name}"/>  
+                            <h:outputLabel style="padding-right:10px;" value="#{role.name}"/>
+                        </ui:repeat>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">Assign roles</f:facet>
+                        <ui:repeat value="#{adminBean.availableUserRoles.get(user)}" var="role">
+                            <h:commandButton value="Add #{role} role" class="btn" action="#{adminBean.addRole(user, role)}" ></h:commandButton>
                         </ui:repeat>
                     </h:column>
                     <h:column>
                         <h:commandLink class="btn btn-danger" value="Remove" action="#{adminBean.deleteUser(user)}">
                             <f:ajax event="action" render="users kweets"/>
-                        </h:commandLink> 
+                        </h:commandLink>
                     </h:column>
                 </h:dataTable>
             </h:form>
@@ -47,34 +54,34 @@
 
         <h:panelGroup>
             <h:form class="page-header">
-                <h:outputLabel value="Kweet Filter: "/>  
+                <h:outputLabel value="Kweet Filter: "/>
                 <h:inputText value="#{adminBean.kweetFilter}" id="kweetFilter">
                     <f:ajax event="keyup" execute="kweetFilter" render="kweets"/>
-                </h:inputText> 
+                </h:inputText>
             </h:form>
         </h:panelGroup>
 
         <h:panelGroup id="kweets">
             <h:form class="well">
-                <h:dataTable class="table" value="#{adminBean.kweets}" var ="kweet">
+                <h:dataTable class="table" value="#{adminBean.kweets}" var="kweet">
                     <h:column>
-                        <f:facet name = "header">Content</f:facet>
-                        <h:outputLabel value="#{kweet.content}"/>  
+                        <f:facet name="header">Content</f:facet>
+                        <h:outputLabel value="#{kweet.content}"/>
                     </h:column>
                     <h:column>
-                        <f:facet name = "header">Posted by</f:facet>
-                        <h:outputLabel value="#{kweet.createdBy.username}"/>  
+                        <f:facet name="header">Posted by</f:facet>
+                        <h:outputLabel value="#{kweet.createdBy.username}"/>
                     </h:column>
                     <h:column>
-                        <f:facet name = "header">Posted on</f:facet>
+                        <f:facet name="header">Posted on</f:facet>
                         <h:outputLabel value="#{kweet.postedOn}">
-                            <f:convertDateTime pattern="HH:mm dd.MM.yyyy" />
-                        </h:outputLabel>  
+                            <f:convertDateTime pattern="HH:mm dd.MM.yyyy"/>
+                        </h:outputLabel>
                     </h:column>
                     <h:column>
                         <h:commandLink class="btn btn-danger" value="Remove" action="#{adminBean.deleteKweet(kweet)}">
                             <f:ajax event="action" render="kweets"/>
-                        </h:commandLink> 
+                        </h:commandLink>
                     </h:column>
                 </h:dataTable>
             </h:form>

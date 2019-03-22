@@ -6,8 +6,10 @@
 package services;
 
 import dao.interfaces.KweetDao;
+import dao.interfaces.RoleDao;
 import dao.interfaces.UserDao;
 import domain.Kweet;
+import domain.Role;
 import domain.User;
 import domain.views.ProfileView;
 import exceptions.UserNotFoundException;
@@ -29,8 +31,12 @@ public class UserService {
     @JPA
     private KweetDao kweetDao;
 
+    @Inject
+    @JPA
+    private RoleDao roleDao;
+
     public ProfileView getProfile(String username) throws UserNotFoundException {
-        User user = dao.getUser(username);
+        User user = dao.find(username);
         if (user == null) {
             throw new UserNotFoundException("User not found");
         }
@@ -43,7 +49,7 @@ public class UserService {
     }
 
     public List<String> getFollowers(String username) throws UserNotFoundException {
-        User user = dao.getUser(username);
+        User user = dao.find(username);
         if (user != null) {
             return createUserArrayResponse(user.getFollowers());
         } else {
@@ -52,7 +58,7 @@ public class UserService {
     }
 
     public List<String> getFollowing(String username) throws UserNotFoundException {
-        User user = dao.getUser(username);
+        User user = dao.find(username);
         if (user != null) {
             return createUserArrayResponse(user.getFollowing());
         } else {
@@ -73,8 +79,8 @@ public class UserService {
     }
 
     public boolean addFollow(String username, String userToFollow) throws UserNotFoundException {
-        User user = dao.getUser(username);
-        User user2 = dao.getUser(userToFollow);
+        User user = dao.find(username);
+        User user2 = dao.find(userToFollow);
         if (user == null || user2 == null) {
             throw new UserNotFoundException();
         }
@@ -91,16 +97,16 @@ public class UserService {
     }
 
     public void deleteUser(User user) throws UserNotFoundException {
-        User foundUser = dao.getUser(user.getUsername());
-     
+        User foundUser = dao.find(user.getUsername());
+
         if (foundUser == null) {
             throw new UserNotFoundException();
         }
-        
+
         for (Kweet kweet : kweetDao.getUserKweets(foundUser)) {
             kweetDao.delete(kweet);
         }
-        for(Kweet likedKweet: foundUser.getLikes()){
+        for (Kweet likedKweet : foundUser.getLikes()) {
             likedKweet.getLikes().remove(foundUser);
         }
         for (User following : foundUser.getFollowing()) {
@@ -109,7 +115,25 @@ public class UserService {
         for (User follower : foundUser.getFollowers()) {
             follower.getFollowing().remove(foundUser);
         }
-        
+
         dao.delete(foundUser);
+    }
+
+    public void assignRole(User user, String role) throws UserNotFoundException {
+        User foundUser = dao.find(user.getUsername());
+        if (foundUser == null) {
+            throw new UserNotFoundException();
+        }
+        Role foundRole = roleDao.find(role);
+        if(foundRole == null) {
+            //TODO: throw exception
+            return;
+        }
+        foundUser.getRoles().add(foundRole);
+        foundRole.getUsers().add(foundUser);
+    }
+
+    public List<Role> getAllRoles() {
+        return roleDao.getAll();
     }
 }

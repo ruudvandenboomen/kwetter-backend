@@ -22,7 +22,7 @@ public class UserDaoColl implements UserDao {
     }
 
     @Override
-    public User getUser(String name) {
+    public User find(String name) {
         User user = null;
         for (User u : users) {
             if (u.getUsername().equals(name)) {

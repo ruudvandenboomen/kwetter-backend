@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface UserDao extends BaseDao<User> {
 
-    User getUser(String name);
+    User find(String name);
 
     int count();
 
