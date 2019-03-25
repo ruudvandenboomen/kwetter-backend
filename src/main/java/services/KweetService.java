@@ -107,13 +107,14 @@ public class KweetService {
 
     private void setHashtags(Kweet kweet, Collection<String> foundTags) {
         for (String tag : foundTags) {
-            Hashtag hashtag = hashtagDao.findHashtag(tag);
+            Hashtag hashtag = hashtagDao.find(tag);
             if (hashtag == null) {
                 hashtag = new Hashtag(tag);
                 hashtagDao.create(hashtag);
             }
             hashtag.setLastUsed(kweet.getPostedOn());
             hashtag.setTimesUsed(hashtag.getTimesUsed() + 1);
+            hashtag.getKweets().add(kweet);
             kweet.getHashtags().add(hashtag);
         }
     }
@@ -144,7 +145,9 @@ public class KweetService {
 
     public void deleteKweet(Kweet kweet) {
         if (kweet.getId() != null) {
-            kweetDao.delete(kweetDao.find(kweet.getId()));
+            editKweetHashtags(kweet);
+            Kweet foundKweet = kweetDao.find(kweet.getId());
+            kweetDao.delete(foundKweet);
         }
     }
 
@@ -165,6 +168,23 @@ public class KweetService {
         if (kweet == null) {
             throw new KweetNotFoundException();
         }
+        for (Hashtag hashtag : kweet.getHashtags()) {
+            Hashtag foundHashtag = hashtagDao.find(hashtag.getName());
+            foundHashtag.setTimesUsed(foundHashtag.getTimesUsed() - 1);
+        }
         kweetDao.delete(kweet);
+    }
+
+    private void editKweetHashtags(Kweet kweet) {
+        for (Hashtag hashtag : kweet.getHashtags()) {
+            hashtag.setTimesUsed(hashtag.getTimesUsed() - 1);
+            if (hashtag.getKweets().size() > 1) {
+                hashtag.getKweets().remove(kweet);
+                hashtag.setLastUsed(hashtag.getKweets().get(hashtag.getKweets().size() - 1).getPostedOn());
+                hashtagDao.edit(hashtag);
+            } else if (hashtag.getKweets().size() == 1) {
+                hashtagDao.delete(hashtagDao.find(hashtag.getName()));
+            }
+        }
     }
 }

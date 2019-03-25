@@ -14,12 +14,14 @@
         <title>Admin Console</title>
     </h:head>
     <h:body class="container">
-        <h:panelGroup>
+
+        <h:panelGroup style='text-align: right;'>
             <h:form>
-                <h:outputText   value="#{authBean.getPrincipalName()}"/>
-                <h:commandLink  action="#{authBean.doLogout()}" value="Logout"/>
+                <h:outputText style='padding-right: 5px;' value="#{authBean.getPrincipalName()}"/>
+                <h:commandLink action="#{authBean.doLogout()}" value="Logout"/>
             </h:form>
         </h:panelGroup>
+
         <h:panelGroup>
             <h:form class="page-header">
                 <h:outputLabel for="userFilter" value="Name Filter: "/>

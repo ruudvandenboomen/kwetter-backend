@@ -8,11 +8,9 @@ package dao.interfaces;
 import domain.Hashtag;
 import java.util.List;
 
-public interface HashtagDao {
+public interface HashtagDao extends BaseDao<Hashtag>  {
 
-    Hashtag findHashtag(String name);
-
-    void create(Hashtag hashtag);
+    Hashtag find(String name);
 
     public List<Hashtag> getPopularHashtags();
 }

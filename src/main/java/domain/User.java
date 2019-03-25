@@ -19,6 +19,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import lombok.Getter;
@@ -31,6 +32,7 @@ import lombok.Setter;
 @NamedQueries({
     @NamedQuery(name = "user.findByName", query = "SELECT u FROM User u WHERE u.username = :name"), //    @NamedQuery(name = "user.getKweets", query = "SELECT * FROM User u, Kweet k WHERE k.user == u.id")
 })
+@Table(name = "user")
 @RequiredArgsConstructor
 @NoArgsConstructor
 @Getter

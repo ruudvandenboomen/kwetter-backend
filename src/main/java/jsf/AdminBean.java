@@ -25,7 +25,7 @@ import lombok.Setter;
 import services.KweetService;
 import services.UserService;
 
-@Named(value = "adminBean")
+@Named
 @RequestScoped
 @RolesAllowed("admin")
 public class AdminBean implements Serializable {
@@ -55,7 +55,6 @@ public class AdminBean implements Serializable {
                     users.add(u);
                 }
             }
-            return users;
         } else {
             users = userService.getAll();
         }

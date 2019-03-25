@@ -65,7 +65,7 @@ public class HashtagDaoJpaTest {
         hashtagDao.create(hashtag);
         tx.commit();
 
-        assertThat(hashtagDao.findHashtag(hashtag.getName()).getName(), is(hashtag.getName()));
+        assertThat(hashtagDao.find(hashtag.getName()).getName(), is(hashtag.getName()));
     }
 
 }

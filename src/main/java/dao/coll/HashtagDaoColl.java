@@ -18,7 +18,7 @@ public class HashtagDaoColl implements HashtagDao {
     }
 
     @Override
-    public Hashtag findHashtag(String name) {
+    public Hashtag find(String name) {
         Hashtag found = null;
         for (Hashtag hashtag : hashtags) {
             if (hashtag.getName().equals(name)) {
@@ -29,12 +29,27 @@ public class HashtagDaoColl implements HashtagDao {
     }
 
     @Override
-    public void create(Hashtag hashtag) {
-        hashtags.add(hashtag);
+    public List<Hashtag> getPopularHashtags() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public List<Hashtag> getPopularHashtags() {
+    public void create(Hashtag Object) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Hashtag find(long id) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void edit(Hashtag Object) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void delete(Hashtag Object) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

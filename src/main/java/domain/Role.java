@@ -8,7 +8,6 @@ package domain;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.*;
-
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -16,7 +15,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 @Entity(name = "Role")
-@Table(name = "Role")
+@Table(name = "role")
 @NamedQueries({
         @NamedQuery(name = "role.findByName", query = "SELECT r FROM Role r WHERE r.name = :name")
 })

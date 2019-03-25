@@ -120,12 +120,7 @@ public class UserService {
         for (Kweet likedKweet : foundUser.getLikes()) {
             likedKweet.getLikes().remove(foundUser);
         }
-        for (User following : foundUser.getFollowing()) {
-            following.getFollowers().remove(foundUser);
-        }
-        for (User follower : foundUser.getFollowers()) {
-            follower.getFollowing().remove(foundUser);
-        }
+
         
         dao.delete(foundUser);
     }

@@ -17,12 +17,18 @@ import qualifier.JPA;
 
 @JPA
 @Stateless
-public class HashtagDaoJpa implements HashtagDao {
+public class HashtagDaoJpa extends BaseDaoJpa<Hashtag> implements HashtagDao {
 
     @PersistenceContext(unitName = "kwetterPU")
     private EntityManager em;
 
     public HashtagDaoJpa() {
+        super(Hashtag.class);
+    }
+
+    @Override
+    protected EntityManager getEntityManager() {
+        return this.em;
     }
 
     public void setEm(EntityManager em) {
@@ -30,7 +36,7 @@ public class HashtagDaoJpa implements HashtagDao {
     }
 
     @Override
-    public Hashtag findHashtag(String name) {
+    public Hashtag find(String name) {
         TypedQuery<Hashtag> query = em.createNamedQuery("hashtag.findByName", Hashtag.class);
         query.setParameter("name", name);
         List<Hashtag> hashtag = query.getResultList();
@@ -38,11 +44,6 @@ public class HashtagDaoJpa implements HashtagDao {
             return hashtag.get(0);
         }
         return null;
-    }
-
-    @Override
-    public void create(Hashtag hashtag) {
-        em.persist(hashtag);
     }
 
     @Override
@@ -55,4 +56,5 @@ public class HashtagDaoJpa implements HashtagDao {
         query.setMaxResults(5);
         return query.getResultList();
     }
+
 }
