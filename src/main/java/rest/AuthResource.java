@@ -53,6 +53,7 @@ public class AuthResource {
     }
 
     @POST
+    @Path("/register")
     @Consumes(MediaType.APPLICATION_JSON)
     @Operation(summary = "Create a user")
     public Response add(User user) {
