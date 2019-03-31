@@ -12,13 +12,11 @@ import domain.Kweet;
 import domain.Role;
 import domain.User;
 import domain.views.ProfileView;
-import exceptions.InvalidUserException;
 import exceptions.UserNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
-import javax.security.enterprise.identitystore.Pbkdf2PasswordHash;
 import qualifier.JPA;
 import util.KweetConverter;
 
@@ -40,8 +38,6 @@ public class UserService {
     @Inject
     KweetService kweetService;
     
-    @Inject
-    Pbkdf2PasswordHash pbkdf2Hash;
     
     public ProfileView getProfile(String username) throws UserNotFoundException {
         User user = dao.find(username);
@@ -74,16 +70,7 @@ public class UserService {
             throw new UserNotFoundException();
         }
     }
-    
-    public void addUser(User user) throws InvalidUserException {
-        if (user.getPassword() == null || user.getPassword().equals("")) {
-            throw new InvalidUserException("User has no password");
-        } else {
-            user.setPassword(pbkdf2Hash.generate(user.getPassword().toCharArray()));
-            dao.create(user);
-        }
-    }
-    
+
     private List<String> createUserArrayResponse(List<User> users) {
         List<String> response = new ArrayList<>();
         for (User u : users) {

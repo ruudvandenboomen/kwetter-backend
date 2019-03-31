@@ -7,16 +7,13 @@ package rest;
 
 import domain.User;
 import domain.views.ProfileView;
-import exceptions.InvalidUserException;
 import exceptions.UserNotFoundException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import java.net.URI;
 import java.util.List;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
-import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -32,20 +29,7 @@ import services.UserService;
 public class UserResource {
 
     @Inject
-    UserService userService; 
-
-    @POST
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Operation(summary = "Create a user")
-    public Response add(User user) {
-        try {
-            userService.addUser(user);
-        } catch (InvalidUserException ex) {
-            throw new WebApplicationException(ex.getMessage(), Response.Status.BAD_REQUEST);
-        }
-        URI id = URI.create(user.getUsername());
-        return Response.created(id).build();
-    }
+    UserService userService;
 
     @PUT
     @Path("{id}")

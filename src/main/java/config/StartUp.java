@@ -17,30 +17,11 @@ import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
-import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import javax.inject.Named;
-import javax.security.enterprise.authentication.mechanism.http.FormAuthenticationMechanismDefinition;
-import javax.security.enterprise.authentication.mechanism.http.LoginToContinue;
-import javax.security.enterprise.identitystore.DatabaseIdentityStoreDefinition;
-import javax.security.enterprise.identitystore.PasswordHash;
 import javax.security.enterprise.identitystore.Pbkdf2PasswordHash;
 import qualifier.JPA;
 import services.KweetService;
 
-@DatabaseIdentityStoreDefinition(
-        dataSourceLookup = "${'jdbc/kwetter'}",
-        callerQuery = "#{'select password from user where email = ?'}",
-        groupsQuery = "select r.name from role r, user u, user_roles ur where u.email = ? AND u.id = ur.user_id AND r.id = ur.role_id",
-        hashAlgorithm = PasswordHash.class,
-        priority = 10
-)
-@FormAuthenticationMechanismDefinition(
-        loginToContinue = @LoginToContinue(
-                loginPage = "/login.xhtml",
-                errorPage = "/login-error.xhtml"))
-@ApplicationScoped
-@Named
 @Singleton
 @Startup
 public class StartUp {

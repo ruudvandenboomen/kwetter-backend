@@ -27,8 +27,13 @@
         <servlet-name>Faces Servlet</servlet-name>
         <url-pattern>*.xhtml</url-pattern>
     </servlet-mapping>
+    
+    <!-- Session configuration -->
     <session-config>
-        <session-timeout>30</session-timeout>
+        <cookie-config>
+            <http-only>true</http-only> <!-- Prevent client side scripting from accessing/manipulating session cookie. -->
+        </cookie-config>
+        <tracking-mode>COOKIE</tracking-mode> <!-- This disables URL rewriting. -->
     </session-config>
     
     <security-constraint>
@@ -40,6 +45,20 @@
             <role-name>admin</role-name>
         </auth-constraint>
     </security-constraint>
+    
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>User pages</web-resource-name>
+            <url-pattern>/api/user/*</url-pattern>
+            <url-pattern>/api/kweet/*</url-pattern>
+            <url-pattern>/api/hashtag/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>user</role-name>
+            <role-name>admin</role-name>
+        </auth-constraint>
+    </security-constraint>
+    
     <security-role>
         <role-name>user</role-name>
     </security-role>
