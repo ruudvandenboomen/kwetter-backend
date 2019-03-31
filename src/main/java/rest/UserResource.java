@@ -9,8 +9,8 @@ import domain.User;
 import domain.views.ProfileView;
 import exceptions.InvalidUserException;
 import exceptions.UserNotFoundException;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import java.net.URI;
 import java.util.List;
 import javax.inject.Inject;
@@ -26,17 +26,17 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import services.UserService;
 
-@Api("User")
 @Path("user")
+@Tag(name = "User")
 @Produces(MediaType.APPLICATION_JSON)
 public class UserResource {
 
     @Inject
-    UserService userService;
+    UserService userService; 
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    @ApiOperation(value = "Create a user")
+    @Operation(summary = "Create a user")
     public Response add(User user) {
         try {
             userService.addUser(user);
@@ -50,7 +50,7 @@ public class UserResource {
     @PUT
     @Path("{id}")
     @Consumes(MediaType.APPLICATION_JSON)
-    @ApiOperation(value = "Edit a user")
+    @Operation(summary = "Edit a user")
     public Response edit(User user) {
         userService.editUser(user);
         return Response.ok().build();
@@ -58,7 +58,7 @@ public class UserResource {
 
     @GET
     @Path("{username}")
-    @ApiOperation(value = "Retrieve a user his profile by it's username")
+    @Operation(summary = "Retrieve a user his profile by it's username")
     public Response getProfile(@PathParam("username") String username) {
         ProfileView profile = null;
         try {
@@ -71,7 +71,7 @@ public class UserResource {
 
     @GET
     @Path("{username}/followers")
-    @ApiOperation(value = "Retrieve a user his followers by it's name")
+    @Operation(summary = "Retrieve a user his followers by it's name")
     public Response getFollowers(@PathParam("username") String username) {
         List<String> followers;
         try {
@@ -84,7 +84,7 @@ public class UserResource {
 
     @GET
     @Path("{username}/following")
-    @ApiOperation(value = "Retrieve a user his follwing by it's name")
+    @Operation(summary = "Retrieve a user his follwing by it's name")
     public Response getFollowing(@PathParam("username") String username) {
         List<String> following;
         try {
@@ -97,7 +97,7 @@ public class UserResource {
 
     @PUT
     @Path("{username}/following/add/{userToFollow}")
-    @ApiOperation(value = "Let a user follow another user")
+    @Operation(summary = "Let a user follow another user")
     public Response follow(@PathParam("username") String username, @PathParam("userToFollow") String userToFollow) {
         try {
             if (userService.addFollow(username, userToFollow)) {

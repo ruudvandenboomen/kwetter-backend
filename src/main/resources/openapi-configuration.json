@@ -1,0 +1,15 @@
+{
+    "resourcePackages": [
+        "rest"
+    ],
+    "prettyPrint": true,
+    "cacheTTL": 0,
+    "openAPI": {
+        "info": {
+            "version": "1.0",
+            "title": "Kwetter API",
+            "description": "Swagger for the Kwetter backend API"
+        }
+    },
+    "basePath": "Kwetter/api"
+}

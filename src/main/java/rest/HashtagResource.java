@@ -5,8 +5,8 @@
  */
 package rest;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -15,7 +15,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import services.HashtagService;
 
-@Api("Hashtag")
+@Tag(name = "Hashtag")
 @Path("hashtag")
 public class HashtagResource {
 
@@ -24,7 +24,7 @@ public class HashtagResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(value = "Find the trending hashtags")
+    @Operation(summary = "Find the trending hashtags")
     public Response getPopularHashtags() {
         return Response.ok(hashtagService.getPopularHashtags()).build();
     }

@@ -38,6 +38,9 @@ public class UserService {
     private RoleDao roleDao;
     
     @Inject
+    KweetService kweetService;
+    
+    @Inject
     Pbkdf2PasswordHash pbkdf2Hash;
     
     public ProfileView getProfile(String username) throws UserNotFoundException {
@@ -115,12 +118,17 @@ public class UserService {
         }
         
         for (Kweet kweet : kweetDao.getUserKweets(foundUser)) {
-            kweetDao.delete(kweet);
+            kweetService.deleteKweet(kweet);
         }
         for (Kweet likedKweet : foundUser.getLikes()) {
             likedKweet.getLikes().remove(foundUser);
         }
-
+        for (User following : foundUser.getFollowing()) {
+            following.getFollowers().remove(foundUser);
+        }
+        for (User follower : foundUser.getFollowers()) {
+            follower.getFollowing().remove(foundUser);
+        }
         
         dao.delete(foundUser);
     }
