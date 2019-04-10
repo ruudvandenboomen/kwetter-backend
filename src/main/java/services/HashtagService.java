@@ -6,11 +6,12 @@
 package services;
 
 import dao.interfaces.HashtagDao;
-import domain.Hashtag;
+import domain.views.HashtagView;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import qualifier.JPA;
+import util.HashtagConverter;
 
 @Stateless
 public class HashtagService {
@@ -19,8 +20,8 @@ public class HashtagService {
     @JPA
     private HashtagDao hashtagDao;
 
-    public List<Hashtag> getPopularHashtags() {
-        return hashtagDao.getPopularHashtags();
+    public List<HashtagView> getPopularHashtags() {
+        return HashtagConverter.convertHashtags(hashtagDao.getPopularHashtags());
     }
 
 }

@@ -1,10 +1,12 @@
 version: "3"
 services:
     mysql:
+        build: ./db/Dockerfile
         image: mysql
         ports:
             - "3306:3306"  
     payara:
+        build: .
         image: mypayara
         links:
             - "mysql"

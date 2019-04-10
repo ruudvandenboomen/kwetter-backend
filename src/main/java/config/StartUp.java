@@ -44,10 +44,10 @@ public class StartUp {
     @Inject
     Pbkdf2PasswordHash pbkdf2Hash;
 
-    public StartUp() {
-    }
+        public StartUp() {
+        }
 
-    @PostConstruct
+        @PostConstruct
     private void intData() {
         Role userRole = new Role("user");
         Role adminRole = new Role("admin");
@@ -64,14 +64,14 @@ public class StartUp {
         user3.getRoles().add(userRole);
 
         Kweet kweet = new Kweet("Nice weather today!");
-        Kweet kweet2 = new Kweet("Hi you @Fred !");
+        Kweet kweet2 = new Kweet("Hi you @Fred @Ruud !");
         Kweet kweet3 = new Kweet("Nice weather today! #sunny");
 
         userDoa.create(user);
         userDoa.create(user2);
         userDoa.create(user3);
 
-        try {
+        try { 
             kweetservice.createKweet(kweet, "Ruud");
             kweetservice.createKweet(kweet2, "Henk");
             kweetservice.createKweet(kweet3, "Ruud");

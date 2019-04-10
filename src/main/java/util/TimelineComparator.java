@@ -12,7 +12,7 @@ public class TimelineComparator implements Comparator<KweetView> {
 
     @Override
     public int compare(KweetView t, KweetView t1) {
-        return t.getPostedOn().compareTo(t1.getPostedOn());
+        return t1.getPostedOn().compareTo(t.getPostedOn());
     }
 
 }

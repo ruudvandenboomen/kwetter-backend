@@ -11,12 +11,9 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class KweetView {
+public class HashtagView {
 
-    private long id;
-    private String content;
-    private Date postedOn;
-    private String createdBy;
-    private String profileImage;
-    private int likes;
+    private String name;
+    private int timesUsed = 0;
+    private Date lastUsed;
 }

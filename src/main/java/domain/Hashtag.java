@@ -40,6 +40,7 @@ public class Hashtag {
     private Long id;
 
     @Getter
+    @Setter
     @NonNull
     @Column(unique = true)
     private String name;

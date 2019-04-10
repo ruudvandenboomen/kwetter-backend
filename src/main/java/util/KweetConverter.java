@@ -24,9 +24,10 @@ public class KweetConverter {
 
     public static KweetView convertKweet(Kweet kweet) {
         KweetView kweetView = new KweetView();
+        kweetView.setId(kweet.getId());
         kweetView.setContent(kweet.getContent());
         kweetView.setPostedOn(kweet.getPostedOn());
-        kweetView.setUsername(kweet.getCreatedBy().getUsername());
+        kweetView.setCreatedBy(kweet.getCreatedBy().getUsername());
         kweetView.setLikes(kweet.getLikes().size());
         return kweetView;
     }

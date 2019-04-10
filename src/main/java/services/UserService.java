@@ -11,6 +11,7 @@ import dao.interfaces.UserDao;
 import domain.Kweet;
 import domain.Role;
 import domain.User;
+import domain.views.KweetView;
 import domain.views.ProfileView;
 import exceptions.UserNotFoundException;
 import java.util.ArrayList;
@@ -19,6 +20,7 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 import qualifier.JPA;
 import util.KweetConverter;
+import util.TimelineComparator;
 
 @Stateless
 public class UserService {
@@ -49,7 +51,9 @@ public class UserService {
         profileView.setUsername(username);
         profileView.setFollowerCount(user.getFollowers().size());
         profileView.setFollowingCount(user.getFollowing().size());
-        profileView.setKweets(KweetConverter.convertKweets(kweetDao.getUserKweets(user)));
+        List<KweetView> kweets = KweetConverter.convertKweets(kweetDao.getUserKweets(user));
+        kweets.sort(new TimelineComparator());
+        profileView.setKweets(kweets);
         return profileView;
     }
     
