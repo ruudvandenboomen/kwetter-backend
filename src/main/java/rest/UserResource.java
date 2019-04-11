@@ -54,7 +54,7 @@ public class UserResource {
     }
 
     @GET
-    @Path("{username}/followers") 
+    @Path("{username}/followers")
     @Operation(summary = "Retrieve a user his followers by it's name")
     public Response getFollowers(@PathParam("username") String username) {
         List<String> followers;

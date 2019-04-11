@@ -1,5 +1,6 @@
 package rest;
 
+import auth.JWTStore;
 import domain.Kweet;
 import exceptions.KweetNotFoundException;
 import exceptions.UserNotFoundException;
@@ -10,6 +11,7 @@ import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -27,6 +29,9 @@ public class KweetResource {
 
     @Inject
     KweetService kweetService;
+
+    @Inject
+    JWTStore jwtStore;
 
     @POST
     @Path("{username}")
@@ -88,12 +93,14 @@ public class KweetResource {
     @DELETE
     @Path("{id}")
     @Operation(summary = "Delete kweet by id")
-    public Response deleteKweet(@PathParam("id") long id) {
+    public Response deleteKweet(@HeaderParam("Authorization") String authorization, @PathParam("id") long id) {
         try {
-            kweetService.deleteKweet(id);
+            kweetService.deleteKweet(id, this.jwtStore.getCredential(authorization.substring(7)).getCaller());
             return Response.ok().build();
         } catch (KweetNotFoundException ex) {
             throw new WebApplicationException(ex.getMessage(), Response.Status.BAD_REQUEST);
+        } catch (Exception ex) {
+            throw new WebApplicationException(ex.getMessage(), Response.Status.UNAUTHORIZED);
         }
     }
 

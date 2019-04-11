@@ -14,6 +14,7 @@ import domain.User;
 import domain.views.KweetView;
 import domain.views.UserListView;
 import exceptions.KweetNotFoundException;
+import exceptions.UnauthorizedException;
 import exceptions.UserNotFoundException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -163,16 +164,18 @@ public class KweetService {
         return KweetConverter.createUserListItems(kweet.getLikes());
     }
 
-    public void deleteKweet(long id) throws KweetNotFoundException {
+    public void deleteKweet(long id, String name) throws KweetNotFoundException, UnauthorizedException {
         Kweet kweet = kweetDao.find(id);
         if (kweet == null) {
             throw new KweetNotFoundException();
         }
-        for (Hashtag hashtag : kweet.getHashtags()) {
-            Hashtag foundHashtag = hashtagDao.find(hashtag.getName());
-            foundHashtag.setTimesUsed(foundHashtag.getTimesUsed() - 1);
+        if (kweet.getCreatedBy().getUsername().equals(name)) {
+            editKweetHashtags(kweet);
+            kweetDao.delete(kweet);
+        } else {
+            throw new UnauthorizedException();
         }
-        kweetDao.delete(kweet);
+
     }
 
     private void editKweetHashtags(Kweet kweet) {
