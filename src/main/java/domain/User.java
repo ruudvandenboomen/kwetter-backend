@@ -19,6 +19,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -54,6 +55,11 @@ public class User implements Serializable {
     @Column(unique = true)
     private String email;
 
+    private boolean verified = false;
+    
+    @OneToOne(mappedBy = "user")
+    private RegistrationKey registrationKey;
+    
     @Temporal(TemporalType.DATE)
     private Date dateOfBirth;
 

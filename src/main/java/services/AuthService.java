@@ -7,22 +7,35 @@ package services;
 
 import auth.JWTStore;
 import com.nimbusds.jose.JOSEException;
+import dao.interfaces.RegistrationKeyDao;
 import dao.interfaces.UserDao;
+import domain.RegistrationKey;
 import domain.Role;
 import domain.User;
 import exceptions.InvalidLoginException;
 import exceptions.InvalidUserException;
+import exceptions.UnauthorizedException;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.inject.Inject;
+import javax.mail.MessagingException;
 import javax.security.enterprise.identitystore.Pbkdf2PasswordHash;
 import qualifier.JPA;
+import util.EmailSender;
 
 public class AuthService {
 
-    @Inject
     @JPA
+    @Inject
     UserDao userDao;
+
+    @JPA
+    @Inject
+    RegistrationKeyDao registrationKeyDao;
 
     @Inject
     Pbkdf2PasswordHash pbkdf2Hash;
@@ -30,8 +43,14 @@ public class AuthService {
     @Inject
     JWTStore jwtStore;
 
-    public String login(String username, String password) throws InvalidLoginException, JOSEException {
+    @Inject
+    EmailSender emailSender;
+
+    public String login(String username, String password) throws InvalidLoginException, JOSEException, UnauthorizedException {
         User foundUser = userDao.find(username);
+        if (!foundUser.isVerified()) {
+            throw new UnauthorizedException();
+        }
         if (pbkdf2Hash.verify(password.toCharArray(), foundUser.getPassword())) {
             List<String> userRoles = new ArrayList<>();
             for (Role role : foundUser.getRoles()) {
@@ -49,7 +68,25 @@ public class AuthService {
         } else {
             user.setPassword(pbkdf2Hash.generate(user.getPassword().toCharArray()));
             userDao.create(user);
+
+            try {
+                String registrationKey = UUID.randomUUID().toString().replace("-", "");
+                User createdUser = userDao.find(user.getUsername());
+                registrationKeyDao.create(new RegistrationKey(registrationKey, createdUser));
+                emailSender.sendEmail(user, registrationKey);
+            } catch (UnsupportedEncodingException ex) {
+                Logger.getLogger(AuthService.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (MessagingException ex) {
+                Logger.getLogger(AuthService.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
+    }
+
+    public void confirmEmail(String key) {
+        RegistrationKey registrationKey = registrationKeyDao.findKey(key);
+        User user = userDao.find(registrationKey.getUser().getUsername());
+        user.setVerified(true);
+        userDao.edit(user);
     }
 
 }

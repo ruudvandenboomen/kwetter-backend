@@ -9,6 +9,7 @@ import com.nimbusds.jose.JOSEException;
 import domain.User;
 import exceptions.InvalidLoginException;
 import exceptions.InvalidUserException;
+import exceptions.UnauthorizedException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.net.URI;
@@ -18,7 +19,9 @@ import javax.inject.Inject;
 import javax.json.JsonObject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
 import static javax.ws.rs.core.HttpHeaders.AUTHORIZATION;
@@ -44,10 +47,10 @@ public class AuthResource {
             String password = credential.getString("password");
             String token = authService.login(username, password);
             return Response.ok().header(AUTHORIZATION, "Bearer " + token).build();
-        } catch (InvalidLoginException ex) {
-            return Response.status(UNAUTHORIZED).build();
-        } catch (JOSEException ex) {
+        } catch (InvalidLoginException | JOSEException ex) {
             Logger.getLogger(AuthResource.class.getName()).log(Level.SEVERE, null, ex);
+            return Response.status(UNAUTHORIZED).build();
+        } catch (UnauthorizedException ex) {
             return Response.status(UNAUTHORIZED).build();
         }
     }
@@ -64,6 +67,15 @@ public class AuthResource {
         }
         URI id = URI.create(user.getUsername());
         return Response.created(id).build();
+    }
+
+    @PUT
+    @Path("/register/confirm/{key}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Operation(summary = "Create a user")
+    public Response add(@PathParam("key") String key) {
+        authService.confirmEmail(key);
+        return Response.ok().build();
     }
 
 }
