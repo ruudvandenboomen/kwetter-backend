@@ -44,10 +44,10 @@ public class StartUp {
     @Inject
     Pbkdf2PasswordHash pbkdf2Hash;
 
-        public StartUp() {
-        }
+    public StartUp() {
+    }
 
-        @PostConstruct
+    @PostConstruct
     private void intData() {
         Role userRole = new Role("user");
         Role adminRole = new Role("admin");
@@ -55,6 +55,10 @@ public class StartUp {
         User user = new User("Ruud", pbkdf2Hash.generate("Test123".toCharArray()), "Ruud@hotmail.com");
         User user2 = new User("Henk", pbkdf2Hash.generate("Test123".toCharArray()), "Henk@hotmail.com");
         User user3 = new User("Fred", pbkdf2Hash.generate("Test123".toCharArray()), "Fred@hotmail.com");
+
+        user.setVerified(true);
+        user2.setVerified(true);
+        user3.setVerified(true);
 
         roleDao.create(userRole);
         roleDao.create(adminRole);
@@ -71,7 +75,7 @@ public class StartUp {
         userDoa.create(user2);
         userDoa.create(user3);
 
-        try { 
+        try {
             kweetservice.createKweet(kweet, "Ruud");
             kweetservice.createKweet(kweet2, "Henk");
             kweetservice.createKweet(kweet3, "Ruud");

@@ -70,12 +70,12 @@ public class AuthResource {
     }
 
     @PUT
-    @Path("/register/confirm/{key}")
+    @Path("/register/verify/{key}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Operation(summary = "Create a user")
     public Response add(@PathParam("key") String key) {
         authService.confirmEmail(key);
         return Response.ok().build();
-    }
+    } 
 
 }
