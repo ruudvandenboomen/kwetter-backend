@@ -27,7 +27,7 @@ public class EmailSender {
 
         message.setSubject("Welcome to Kwetter");
         message.setRecipient(Message.RecipientType.TO, new InternetAddress(user.getEmail(), user.getUsername()));
-        message.setText("Congratz with you new account! \n Click here to verify your email: "
+        message.setText("Congratz with you new account! \nClick here to verify your email: "
                 + "http://localhost:4200/verify/" + registrationKey);
         Transport.send(message);
     }

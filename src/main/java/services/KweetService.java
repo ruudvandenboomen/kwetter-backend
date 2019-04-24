@@ -13,6 +13,7 @@ import domain.Kweet;
 import domain.User;
 import domain.views.KweetView;
 import domain.views.UserListView;
+import event.KweetEvent;
 import exceptions.KweetNotFoundException;
 import exceptions.UnauthorizedException;
 import exceptions.UserNotFoundException;
@@ -23,6 +24,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.ejb.Stateless;
+import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import qualifier.JPA;
 import util.KweetConverter;
@@ -43,6 +45,9 @@ public class KweetService {
     @JPA
     private HashtagDao hashtagDao;
 
+    @Inject
+    private Event<KweetEvent> kweetEvent;
+
     public void createKweet(Kweet kweet, String username) throws UserNotFoundException {
         User user = userDao.find(username);
         if (user == null) {
@@ -50,6 +55,7 @@ public class KweetService {
         }
         kweet.setCreatedBy(user);
         this.kweetDao.create(kweet);
+        kweetEvent.fire(new KweetEvent(kweet));
         setMentions(kweet, regex(kweet.getContent(), "@"));
         setHashtags(kweet, regex(kweet.getContent(), "#"));
     }
@@ -125,7 +131,7 @@ public class KweetService {
         User user = userDao.find(username);
         if (user == null) {
             throw new UserNotFoundException();
-        }
+        } 
         timeline.addAll(KweetConverter.convertKweets(kweetDao.getUserKweets(user)));
         timeline.addAll(KweetConverter.convertKweets(getFollowingKweets(user.getFollowing())));
         timeline.sort(new TimelineComparator());

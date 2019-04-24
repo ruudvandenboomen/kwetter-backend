@@ -7,6 +7,7 @@ package util;
 
 import domain.Hashtag;
 import domain.Kweet;
+import domain.RegistrationKey;
 import domain.Role;
 import domain.User;
 import java.sql.SQLException;
@@ -16,6 +17,7 @@ import javax.persistence.metamodel.EntityType;
 public class DatabaseCleaner {
 
     private static final Class<?>[] ENTITY_TYPES = {
+        RegistrationKey.class,
         Hashtag.class,
         Role.class,
         Kweet.class,
