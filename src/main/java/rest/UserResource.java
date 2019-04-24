@@ -5,8 +5,10 @@
  */
 package rest;
 
+import domain.Link;
 import domain.User;
 import domain.views.ProfileView;
+import domain.views.UserListView;
 import exceptions.UserNotFoundException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -19,8 +21,10 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
 import services.UserService;
 
 @Path("user")
@@ -56,10 +60,11 @@ public class UserResource {
     @GET
     @Path("{username}/followers")
     @Operation(summary = "Retrieve a user his followers by it's name")
-    public Response getFollowers(@PathParam("username") String username) {
-        List<String> followers;
+    public Response getFollowers(@PathParam("username") String username, @Context UriInfo uriInfo) {
+        List<UserListView> followers;
         try {
             followers = userService.getFollowers(username);
+            setUserViewLinks(followers, uriInfo);
         } catch (UserNotFoundException ex) {
             throw new WebApplicationException(ex.getMessage(), Response.Status.NOT_FOUND);
         }
@@ -69,10 +74,11 @@ public class UserResource {
     @GET
     @Path("{username}/following")
     @Operation(summary = "Retrieve a user his follwing by it's name")
-    public Response getFollowing(@PathParam("username") String username) {
-        List<String> following;
+    public Response getFollowing(@PathParam("username") String username, @Context UriInfo uriInfo) {
+        List<UserListView> following;
         try {
             following = userService.getFollowing(username);
+            setUserViewLinks(following, uriInfo);
         } catch (UserNotFoundException ex) {
             throw new WebApplicationException(ex.getMessage(), Response.Status.NOT_FOUND);
         }
@@ -91,6 +97,14 @@ public class UserResource {
             }
         } catch (UserNotFoundException ex) {
             throw new WebApplicationException(ex.getMessage(), Response.Status.NOT_FOUND);
+        }
+    }
+
+    private void setUserViewLinks(List<UserListView> users, UriInfo uriInfo) {
+        for (UserListView userListView : users) {
+            String uri = uriInfo.getBaseUriBuilder().path(UserResource.class)
+                    .path(userListView.getUsername()).build().toString();
+            userListView.getLinks().add(new Link(uri, "profile"));
         }
     }
 }

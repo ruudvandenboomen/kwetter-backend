@@ -2,11 +2,14 @@ package rest;
 
 import auth.JWTStore;
 import domain.Kweet;
+import domain.Link;
+import domain.views.KweetView;
 import exceptions.KweetNotFoundException;
 import exceptions.UserNotFoundException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.net.URI;
+import java.util.List;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -18,8 +21,10 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
 import services.KweetService;
 
 @Path("kweet")
@@ -57,9 +62,11 @@ public class KweetResource {
     @GET
     @Path("{username}/mentions")
     @Operation(summary = "Retrieve the kweets in which the given user is mentioned")
-    public Response getMentions(@PathParam("username") String username) {
+    public Response getMentions(@PathParam("username") String username, @Context UriInfo uriInfo) {
         try {
-            return Response.ok(kweetService.getMentions(username)).build();
+            List<KweetView> kweets = kweetService.getMentions(username);
+            setKweetViewLinks(kweets, uriInfo);
+            return Response.ok(kweets).build();
         } catch (UserNotFoundException ex) {
             throw new WebApplicationException(ex.getMessage(), Response.Status.BAD_REQUEST);
         }
@@ -107,11 +114,21 @@ public class KweetResource {
     @GET
     @Path("{username}/timeline")
     @Operation(summary = "Retrieve the timeline(=his own kweets, and the kweets of people he follows) for a user")
-    public Response getUserTimeline(@PathParam("username") String username) {
+    public Response getUserTimeline(@PathParam("username") String username, @Context UriInfo uriInfo) {
         try {
-            return Response.ok(kweetService.getTimeline(username)).build();
+            List<KweetView> kweets = kweetService.getTimeline(username);
+            setKweetViewLinks(kweets, uriInfo);
+            return Response.ok(kweets).build();
         } catch (UserNotFoundException ex) {
             throw new WebApplicationException(ex.getMessage(), Response.Status.BAD_REQUEST);
+        }
+    }
+
+    private void setKweetViewLinks(List<KweetView> kweets, UriInfo uriInfo) {
+        for (KweetView kweetview : kweets) {
+            String uri = uriInfo.getBaseUriBuilder().path(UserResource.class)
+                    .path(kweetview.getCreatedBy()).build().toString();
+            kweetview.getLinks().add(new Link(uri, "createdBy"));
         }
     }
 

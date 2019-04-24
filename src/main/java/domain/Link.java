@@ -3,19 +3,17 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package domain.views;
+package domain;
 
-import domain.Link;
-import java.util.ArrayList;
-import java.util.List;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class UserListView {
+@AllArgsConstructor
+public class Link {
 
-    private String username;
-    private List<Link> links = new ArrayList<>();
-
+    private String link;
+    private String rel;
 }

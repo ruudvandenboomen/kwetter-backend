@@ -5,7 +5,10 @@
  */
 package domain.views;
 
+import domain.Link;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -19,4 +22,5 @@ public class KweetView {
     private String createdBy;
     private String profileImage;
     private int likes;
+    private List<Link> links = new ArrayList<>();
 }

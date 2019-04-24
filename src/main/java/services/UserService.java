@@ -13,6 +13,7 @@ import domain.Role;
 import domain.User;
 import domain.views.KweetView;
 import domain.views.ProfileView;
+import domain.views.UserListView;
 import exceptions.UserNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,23 +25,22 @@ import util.TimelineComparator;
 
 @Stateless
 public class UserService {
-    
+
     @Inject
     @JPA
     private UserDao dao;
-    
+
     @Inject
     @JPA
     private KweetDao kweetDao;
-    
+
     @Inject
     @JPA
     private RoleDao roleDao;
-    
+
     @Inject
     KweetService kweetService;
-    
-    
+
     public ProfileView getProfile(String username) throws UserNotFoundException {
         User user = dao.find(username);
         if (user == null) {
@@ -56,8 +56,8 @@ public class UserService {
         profileView.setKweets(kweets);
         return profileView;
     }
-    
-    public List<String> getFollowers(String username) throws UserNotFoundException {
+
+    public List<UserListView> getFollowers(String username) throws UserNotFoundException {
         User user = dao.find(username);
         if (user != null) {
             return createUserArrayResponse(user.getFollowers());
@@ -65,8 +65,8 @@ public class UserService {
             throw new UserNotFoundException();
         }
     }
-    
-    public List<String> getFollowing(String username) throws UserNotFoundException {
+
+    public List<UserListView> getFollowing(String username) throws UserNotFoundException {
         User user = dao.find(username);
         if (user != null) {
             return createUserArrayResponse(user.getFollowing());
@@ -75,14 +75,16 @@ public class UserService {
         }
     }
 
-    private List<String> createUserArrayResponse(List<User> users) {
-        List<String> response = new ArrayList<>();
+    private List<UserListView> createUserArrayResponse(List<User> users) {
+        List<UserListView> response = new ArrayList<>();
         for (User u : users) {
-            response.add(u.getUsername());
+            UserListView userListView = new UserListView();
+            userListView.setUsername(u.getUsername());
+            response.add(userListView);
         }
         return response;
     }
-    
+
     public boolean addFollow(String username, String userToFollow) throws UserNotFoundException {
         User user = dao.find(username);
         User user2 = dao.find(userToFollow);
@@ -96,18 +98,18 @@ public class UserService {
             return true;
         }
     }
-    
+
     public List<User> getAll() {
         return dao.getAll();
     }
-    
+
     public void deleteUser(User user) throws UserNotFoundException {
         User foundUser = dao.find(user.getUsername());
-        
+
         if (foundUser == null) {
             throw new UserNotFoundException();
         }
-        
+
         for (Kweet kweet : kweetDao.getUserKweets(foundUser)) {
             kweetService.deleteKweet(kweet);
         }
@@ -120,10 +122,10 @@ public class UserService {
         for (User follower : foundUser.getFollowers()) {
             follower.getFollowing().remove(foundUser);
         }
-        
+
         dao.delete(foundUser);
     }
-    
+
     public void assignRole(User user, String role) throws UserNotFoundException {
         User foundUser = dao.find(user.getUsername());
         if (foundUser == null) {
@@ -137,15 +139,15 @@ public class UserService {
         foundUser.getRoles().add(foundRole);
         foundRole.getUsers().add(foundUser);
     }
-    
+
     public List<Role> getAllRoles() {
         return roleDao.getAll();
     }
-    
+
     public User getUser(String name) {
         return dao.find(name);
     }
-    
+
     public void editUser(User user) {
         dao.edit(user);
     }
