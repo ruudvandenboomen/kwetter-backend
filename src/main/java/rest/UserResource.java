@@ -100,6 +100,21 @@ public class UserResource {
         }
     }
 
+    @PUT
+    @Path("{username}/following/remove/{userToFollow}")
+    @Operation(summary = "Let a user follow another user")
+    public Response unfollow(@PathParam("username") String username, @PathParam("userToFollow") String userToUnfollow) {
+        try {
+            if (userService.removeFollow(username, userToUnfollow)) {
+                return Response.ok().build();
+            } else {
+                throw new WebApplicationException(Response.Status.BAD_REQUEST);
+            }
+        } catch (UserNotFoundException ex) {
+            throw new WebApplicationException(ex.getMessage(), Response.Status.NOT_FOUND);
+        }
+    }
+
     private void setUserViewLinks(List<UserListView> users, UriInfo uriInfo) {
         for (UserListView userListView : users) {
             String uri = uriInfo.getBaseUriBuilder().path(UserResource.class)

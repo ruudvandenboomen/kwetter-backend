@@ -99,6 +99,20 @@ public class UserService {
         }
     }
 
+    public boolean removeFollow(String username, String userToUnfollow) throws UserNotFoundException {
+        User user = dao.find(username);
+        User user2 = dao.find(userToUnfollow);
+        if (user == null || user2 == null) {
+            throw new UserNotFoundException();
+        }
+        if (user.getFollowing().contains(user2)) {
+            user.unfollow(user2);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public List<User> getAll() {
         return dao.getAll();
     }

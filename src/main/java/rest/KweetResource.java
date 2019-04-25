@@ -55,8 +55,10 @@ public class KweetResource {
     @GET
     @Path("{content}")
     @Operation(summary = "Find a kweet by it's content")
-    public Response findByContent(@PathParam("content") String content) {
-        return Response.ok(kweetService.findByContent(content)).build();
+    public Response findByContent(@PathParam("content") String content, @Context UriInfo uriInfo) {
+        List<KweetView> kweets = kweetService.findByContent(content);
+        setKweetViewLinks(kweets, uriInfo);
+        return Response.ok(kweets).build();
     }
 
     @GET

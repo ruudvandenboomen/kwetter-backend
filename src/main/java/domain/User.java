@@ -107,9 +107,9 @@ public class User implements Serializable {
     }
 
     public void unfollow(User user) {
-        if (followers.contains(user) && user.getFollowing().contains(this)) {
-            followers.remove(user);
-            user.following.remove(this);
+        if (following.contains(user)) {
+            following.remove(user);
+            user.followers.remove(this);
         }
     }
 

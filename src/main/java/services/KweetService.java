@@ -60,8 +60,8 @@ public class KweetService {
         setHashtags(kweet, regex(kweet.getContent(), "#"));
     }
 
-    public List<Kweet> findByContent(String content) {
-        return this.kweetDao.findByContent(content);
+    public List<KweetView> findByContent(String content) {
+        return KweetConverter.convertKweets(kweetDao.findByContent(content));
     }
 
     public boolean likeKweet(long id, String username) throws UserNotFoundException, KweetNotFoundException {
