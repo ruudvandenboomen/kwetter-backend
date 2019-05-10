@@ -196,4 +196,14 @@ public class KweetService {
             }
         }
     }
+
+    public boolean kweetLiked(String username, long kweetId) {
+        User user = userDao.find(username);
+        for(Kweet kweet: user.getLikes()){
+            if(kweet.getId() == kweetId){
+                return true;
+            }
+        }
+        return false;
+    }
 }

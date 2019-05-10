@@ -55,19 +55,29 @@ public class KweetResource {
     @GET
     @Path("{content}")
     @Operation(summary = "Find a kweet by it's content")
-    public Response findByContent(@PathParam("content") String content, @Context UriInfo uriInfo) {
+    public Response findByContent(@PathParam("content") String content, @Context UriInfo uriInfo,
+            @HeaderParam("Authorization") String authorization) {
         List<KweetView> kweets = kweetService.findByContent(content);
-        setKweetViewLinks(kweets, uriInfo);
+        try {
+            setKweetViewLinks(kweets, uriInfo, this.jwtStore.getCredential(authorization.substring(7)).getCaller());
+        } catch (Exception ex) {
+            throw new WebApplicationException(ex.getMessage(), Response.Status.UNAUTHORIZED);
+        }
         return Response.ok(kweets).build();
     }
 
     @GET
     @Path("{username}/mentions")
     @Operation(summary = "Retrieve the kweets in which the given user is mentioned")
-    public Response getMentions(@PathParam("username") String username, @Context UriInfo uriInfo) {
+    public Response getMentions(@PathParam("username") String username, @Context UriInfo uriInfo,
+            @HeaderParam("Authorization") String authorization) {
         try {
             List<KweetView> kweets = kweetService.getMentions(username);
-            setKweetViewLinks(kweets, uriInfo);
+            try {
+                setKweetViewLinks(kweets, uriInfo, this.jwtStore.getCredential(authorization.substring(7)).getCaller());
+            } catch (Exception ex) {
+                throw new WebApplicationException(ex.getMessage(), Response.Status.UNAUTHORIZED);
+            }
             return Response.ok(kweets).build();
         } catch (UserNotFoundException ex) {
             throw new WebApplicationException(ex.getMessage(), Response.Status.BAD_REQUEST);
@@ -75,15 +85,17 @@ public class KweetResource {
     }
 
     @PUT
-    @Path("{id}/like/{username}")
+    @Path("{id}/like")
     @Operation(summary = "Like a kweet for the given user")
-    public Response likeKweet(@PathParam("id") long id, @PathParam("username") String username) {
+    public Response likeKweet(@PathParam("id") long id, @HeaderParam("Authorization") String authorization) {
         try {
-            if (kweetService.likeKweet(id, username)) {
+            if (kweetService.likeKweet(id, this.jwtStore.getCredential(authorization.substring(7)).getCaller())) {
                 return Response.ok().build();
             }
         } catch (UserNotFoundException | KweetNotFoundException ex) {
             throw new WebApplicationException(ex.getMessage(), Response.Status.BAD_REQUEST);
+        } catch (Exception ex) {
+            throw new WebApplicationException(ex.getMessage(), Response.Status.UNAUTHORIZED);
         }
         throw new WebApplicationException(Response.Status.BAD_REQUEST);
     }
@@ -116,21 +128,34 @@ public class KweetResource {
     @GET
     @Path("{username}/timeline")
     @Operation(summary = "Retrieve the timeline(=his own kweets, and the kweets of people he follows) for a user")
-    public Response getUserTimeline(@PathParam("username") String username, @Context UriInfo uriInfo) {
+    public Response getUserTimeline(@PathParam("username") String username, @Context UriInfo uriInfo,
+            @HeaderParam("Authorization") String authorization) {
         try {
             List<KweetView> kweets = kweetService.getTimeline(username);
-            setKweetViewLinks(kweets, uriInfo);
+            try {
+                setKweetViewLinks(kweets, uriInfo, this.jwtStore.getCredential(authorization.substring(7)).getCaller());
+            } catch (Exception ex) {
+                throw new WebApplicationException(ex.getMessage(), Response.Status.UNAUTHORIZED);
+            }
             return Response.ok(kweets).build();
         } catch (UserNotFoundException ex) {
             throw new WebApplicationException(ex.getMessage(), Response.Status.BAD_REQUEST);
         }
     }
 
-    private void setKweetViewLinks(List<KweetView> kweets, UriInfo uriInfo) {
+    private void setKweetViewLinks(List<KweetView> kweets, UriInfo uriInfo, String username) {
         for (KweetView kweetview : kweets) {
-            String uri = uriInfo.getBaseUriBuilder().path(UserResource.class)
+            String createdByUri = uriInfo.getBaseUriBuilder().path(UserResource.class)
                     .path(kweetview.getCreatedBy()).build().toString();
-            kweetview.getLinks().add(new Link(uri, "createdBy"));
+            String deleteKweetUri = uriInfo.getBaseUriBuilder().path(KweetResource.class)
+                    .path(String.valueOf(kweetview.getId())).build().toString();
+            String likeKweetUri = uriInfo.getBaseUriBuilder().path(KweetResource.class)
+                    .path(String.valueOf(kweetview.getId())).path("like").build().toString();
+            kweetview.getLinks().add(new Link(createdByUri, "createdBy", "GET"));
+            kweetview.getLinks().add(new Link(deleteKweetUri, "delete", "DELETE"));
+            if (!kweetService.kweetLiked(username, kweetview.getId())) {
+                kweetview.getLinks().add(new Link(likeKweetUri, "like", "PUT"));
+            }
         }
     }
 

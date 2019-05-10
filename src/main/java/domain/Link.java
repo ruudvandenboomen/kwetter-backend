@@ -16,4 +16,5 @@ public class Link {
 
     private String link;
     private String rel;
+    private String method;
 }

@@ -119,7 +119,7 @@ public class UserResource {
         for (UserListView userListView : users) {
             String uri = uriInfo.getBaseUriBuilder().path(UserResource.class)
                     .path(userListView.getUsername()).build().toString();
-            userListView.getLinks().add(new Link(uri, "profile"));
+            userListView.getLinks().add(new Link(uri, "self", "GET"));
         }
     }
 }
