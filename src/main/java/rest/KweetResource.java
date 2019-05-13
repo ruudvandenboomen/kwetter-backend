@@ -100,6 +100,22 @@ public class KweetResource {
         throw new WebApplicationException(Response.Status.BAD_REQUEST);
     }
 
+    @PUT
+    @Path("{id}/unlike")
+    @Operation(summary = "Unlike a kweet for the given user")
+    public Response unlikeKweet(@PathParam("id") long id, @HeaderParam("Authorization") String authorization) {
+        try {
+            if (kweetService.unlikeKweet(id, this.jwtStore.getCredential(authorization.substring(7)).getCaller())) {
+                return Response.ok().build();
+            }
+        } catch (UserNotFoundException | KweetNotFoundException ex) {
+            throw new WebApplicationException(ex.getMessage(), Response.Status.BAD_REQUEST);
+        } catch (Exception ex) {
+            throw new WebApplicationException(ex.getMessage(), Response.Status.UNAUTHORIZED);
+        }
+        throw new WebApplicationException(Response.Status.BAD_REQUEST);
+    }
+
     @GET
     @Path("{id}/likes")
     @Operation(summary = "Get the users who like the given kweet")
@@ -151,10 +167,14 @@ public class KweetResource {
                     .path(String.valueOf(kweetview.getId())).build().toString();
             String likeKweetUri = uriInfo.getBaseUriBuilder().path(KweetResource.class)
                     .path(String.valueOf(kweetview.getId())).path("like").build().toString();
+            String unlikeKweetUri = uriInfo.getBaseUriBuilder().path(KweetResource.class)
+                    .path(String.valueOf(kweetview.getId())).path("unlike").build().toString();
             kweetview.getLinks().add(new Link(createdByUri, "createdBy", "GET"));
             kweetview.getLinks().add(new Link(deleteKweetUri, "delete", "DELETE"));
             if (!kweetService.kweetLiked(username, kweetview.getId())) {
                 kweetview.getLinks().add(new Link(likeKweetUri, "like", "PUT"));
+            } else {
+                kweetview.getLinks().add(new Link(unlikeKweetUri, "unlike", "PUT"));
             }
         }
     }

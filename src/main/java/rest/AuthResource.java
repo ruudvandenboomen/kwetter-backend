@@ -27,7 +27,6 @@ import javax.ws.rs.WebApplicationException;
 import static javax.ws.rs.core.HttpHeaders.AUTHORIZATION;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import static javax.ws.rs.core.Response.Status.UNAUTHORIZED;
 import services.AuthService;
 
 @Path("auth")
@@ -49,9 +48,9 @@ public class AuthResource {
             return Response.ok().header(AUTHORIZATION, "Bearer " + token).build();
         } catch (InvalidLoginException | JOSEException ex) {
             Logger.getLogger(AuthResource.class.getName()).log(Level.SEVERE, null, ex);
-            return Response.status(UNAUTHORIZED).build();
+            throw new WebApplicationException(ex.getMessage(), Response.Status.BAD_REQUEST);
         } catch (UnauthorizedException ex) {
-            return Response.status(UNAUTHORIZED).build();
+            throw new WebApplicationException(ex.getMessage(), Response.Status.UNAUTHORIZED);
         }
     }
 
@@ -76,6 +75,6 @@ public class AuthResource {
     public Response add(@PathParam("key") String key) {
         authService.confirmEmail(key);
         return Response.ok().build();
-    } 
+    }
 
 }

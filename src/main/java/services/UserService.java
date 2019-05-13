@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import javax.ws.rs.NotFoundException;
 import qualifier.JPA;
 import util.KweetConverter;
 import util.TimelineComparator;
@@ -58,21 +59,11 @@ public class UserService {
     }
 
     public List<UserListView> getFollowers(String username) throws UserNotFoundException {
-        User user = dao.find(username);
-        if (user != null) {
-            return createUserArrayResponse(user.getFollowers());
-        } else {
-            throw new UserNotFoundException();
-        }
+        return createUserArrayResponse(getUser(username).getFollowers());
     }
 
     public List<UserListView> getFollowing(String username) throws UserNotFoundException {
-        User user = dao.find(username);
-        if (user != null) {
-            return createUserArrayResponse(user.getFollowing());
-        } else {
-            throw new UserNotFoundException();
-        }
+        return createUserArrayResponse(getUser(username).getFollowing());
     }
 
     private List<UserListView> createUserArrayResponse(List<User> users) {
@@ -86,11 +77,8 @@ public class UserService {
     }
 
     public boolean addFollow(String username, String userToFollow) throws UserNotFoundException {
-        User user = dao.find(username);
-        User user2 = dao.find(userToFollow);
-        if (user == null || user2 == null) {
-            throw new UserNotFoundException();
-        }
+        User user = getUser(username);
+        User user2 = getUser(userToFollow);
         if (user.getFollowing().contains(user2)) {
             return false;
         } else {
@@ -100,11 +88,8 @@ public class UserService {
     }
 
     public boolean removeFollow(String username, String userToUnfollow) throws UserNotFoundException {
-        User user = dao.find(username);
-        User user2 = dao.find(userToUnfollow);
-        if (user == null || user2 == null) {
-            throw new UserNotFoundException();
-        }
+        User user = getUser(username);
+        User user2 = getUser(userToUnfollow);
         if (user.getFollowing().contains(user2)) {
             user.unfollow(user2);
             return true;
@@ -118,11 +103,7 @@ public class UserService {
     }
 
     public void deleteUser(User user) throws UserNotFoundException {
-        User foundUser = dao.find(user.getUsername());
-
-        if (foundUser == null) {
-            throw new UserNotFoundException();
-        }
+        User foundUser = getUser(user.getUsername());
 
         for (Kweet kweet : kweetDao.getUserKweets(foundUser)) {
             kweetService.deleteKweet(kweet);
@@ -141,14 +122,10 @@ public class UserService {
     }
 
     public void assignRole(User user, String role) throws UserNotFoundException {
-        User foundUser = dao.find(user.getUsername());
-        if (foundUser == null) {
-            throw new UserNotFoundException();
-        }
+        User foundUser = getUser(user.getUsername());
         Role foundRole = roleDao.find(role);
         if (foundRole == null) {
-            //TODO: throw exception
-            return;
+            throw new NotFoundException();
         }
         foundUser.getRoles().add(foundRole);
         foundRole.getUsers().add(foundUser);
@@ -158,11 +135,19 @@ public class UserService {
         return roleDao.getAll();
     }
 
-    public User getUser(String name) {
+    public User getUserByName(String name) {
         return dao.find(name);
     }
 
     public void editUser(User user) {
         dao.edit(user);
+    }
+
+    private User getUser(String username) throws UserNotFoundException {
+        User user = dao.find(username);
+        if (user == null) {
+            throw new UserNotFoundException();
+        }
+        return user;
     }
 }

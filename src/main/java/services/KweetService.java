@@ -49,10 +49,7 @@ public class KweetService {
     private Event<KweetEvent> kweetEvent;
 
     public void createKweet(Kweet kweet, String username) throws UserNotFoundException {
-        User user = userDao.find(username);
-        if (user == null) {
-            throw new UserNotFoundException();
-        }
+        User user = getUser(username);
         kweet.setCreatedBy(user);
         this.kweetDao.create(kweet);
         kweetEvent.fire(new KweetEvent(kweet));
@@ -65,16 +62,8 @@ public class KweetService {
     }
 
     public boolean likeKweet(long id, String username) throws UserNotFoundException, KweetNotFoundException {
-        Kweet kweet = kweetDao.find(id);
-        if (kweet == null) {
-            throw new KweetNotFoundException();
-        }
-
-        User user = userDao.find(username);
-        if (user == null) {
-            throw new UserNotFoundException();
-        }
-
+        Kweet kweet = getKweet(id);
+        User user = getUser(username);
         if (!user.getLikes().contains(kweet)) {
             user.getLikes().add(kweet);
             kweet.getLikes().add(user);
@@ -84,12 +73,20 @@ public class KweetService {
         }
     }
 
-    public List<KweetView> getMentions(String username) throws UserNotFoundException {
-        User user = userDao.find(username);
-        if (user == null) {
-            throw new UserNotFoundException();
+    public boolean unlikeKweet(long id, String username)throws UserNotFoundException, KweetNotFoundException {
+        Kweet kweet = getKweet(id);
+        User user = getUser(username);
+        if (user.getLikes().contains(kweet)) {
+            user.getLikes().remove(kweet);
+            kweet.getLikes().remove(user);
+            return true;
+        } else {
+            return false;
         }
-        return KweetConverter.convertKweets(user.getMentions());
+    }
+
+    public List<KweetView> getMentions(String username) throws UserNotFoundException {
+        return KweetConverter.convertKweets(getUser(username).getMentions());
     }
 
     private Collection<String> regex(String content, String prefix) {
@@ -128,10 +125,7 @@ public class KweetService {
 
     public List<KweetView> getTimeline(String username) throws UserNotFoundException {
         List<KweetView> timeline = new ArrayList<>();
-        User user = userDao.find(username);
-        if (user == null) {
-            throw new UserNotFoundException();
-        } 
+        User user = getUser(username);
         timeline.addAll(KweetConverter.convertKweets(kweetDao.getUserKweets(user)));
         timeline.addAll(KweetConverter.convertKweets(getFollowingKweets(user.getFollowing())));
         timeline.sort(new TimelineComparator());
@@ -163,18 +157,11 @@ public class KweetService {
     }
 
     public List<UserListView> getKweetLikes(long id) throws KweetNotFoundException {
-        Kweet kweet = kweetDao.find(id);
-        if (kweet == null) {
-            throw new KweetNotFoundException();
-        }
-        return KweetConverter.createUserListItems(kweet.getLikes());
+        return KweetConverter.createUserListItems(getKweet(id).getLikes());
     }
 
     public void deleteKweet(long id, String name) throws KweetNotFoundException, UnauthorizedException {
-        Kweet kweet = kweetDao.find(id);
-        if (kweet == null) {
-            throw new KweetNotFoundException();
-        }
+        Kweet kweet = getKweet(id);
         if (kweet.getCreatedBy().getUsername().equals(name)) {
             editKweetHashtags(kweet);
             kweetDao.delete(kweet);
@@ -199,11 +186,28 @@ public class KweetService {
 
     public boolean kweetLiked(String username, long kweetId) {
         User user = userDao.find(username);
-        for(Kweet kweet: user.getLikes()){
-            if(kweet.getId() == kweetId){
+        for (Kweet kweet : user.getLikes()) {
+            if (kweet.getId() == kweetId) {
                 return true;
             }
         }
         return false;
     }
+
+    private User getUser(String username) throws UserNotFoundException {
+        User user = userDao.find(username);
+        if (user == null) {
+            throw new UserNotFoundException();
+        }
+        return user;
+    }
+
+    private Kweet getKweet(long id) throws KweetNotFoundException {
+        Kweet kweet = kweetDao.find(id);
+        if (kweet == null) {
+            throw new KweetNotFoundException();
+        }
+        return kweet;
+    }
+
 }

@@ -24,6 +24,7 @@ import java.util.logging.Logger;
 import javax.inject.Inject;
 import javax.mail.MessagingException;
 import javax.security.enterprise.identitystore.Pbkdf2PasswordHash;
+import javax.ws.rs.NotFoundException;
 import qualifier.JPA;
 import util.EmailSender;
 
@@ -48,6 +49,9 @@ public class AuthService {
 
     public String login(String username, String password) throws InvalidLoginException, JOSEException, UnauthorizedException {
         User foundUser = userDao.find(username);
+        if (foundUser == null) {
+            throw new NotFoundException();
+        }
         if (!foundUser.isVerified()) {
             throw new UnauthorizedException();
         }

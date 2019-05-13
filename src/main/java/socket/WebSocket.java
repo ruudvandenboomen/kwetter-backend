@@ -5,70 +5,97 @@
  */
 package socket;
 
-import domain.Kweet;
+import auth.JWTStore;
+import domain.User;
 import event.KweetEvent;
 import java.io.IOException;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.enterprise.event.Observes;
+import javax.inject.Inject;
 import javax.websocket.EncodeException;
 import javax.websocket.OnClose;
 import javax.websocket.OnError;
 import javax.websocket.OnMessage;
 import javax.websocket.OnOpen;
 import javax.websocket.Session;
+import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 
-@ServerEndpoint(value = "/websocket",
+@ServerEndpoint(value = "/websocket/{token}",
         encoders = KweetEncoder.class,
         decoders = KweetDecoder.class)
 
 public class WebSocket {
 
-    private static final Set<Session> peers = Collections.synchronizedSet(new HashSet<Session>());
+    private static final Map<String, Set<Session>> sessions = Collections.synchronizedMap(new HashMap<>());
+
+    @Inject
+    JWTStore jwtStore;
 
     @OnOpen
-    public void onOpen(Session peer) {
-        peers.add(peer);
+    public void onOpen(@PathParam("token") String token, Session peer) {
+        String username = getUsername(token);
+        if (username != null) {
+            if (sessions.get(username) != null) {
+                Set<Session> set = sessions.get(username);
+                set.add(peer);
+                sessions.put(username, set);
+            } else {
+                Set<Session> set = new HashSet<>();
+                set.add(peer);
+                sessions.put(username, set);
+            }
+        }
     }
 
     @OnClose
-    public void onClose(Session peer) {
-        peers.remove(peer);
+    public void onClose(@PathParam("token") String token, Session peer) {
+        String username = getUsername(token);
+        if (username != null) {
+            for (Session session : sessions.get(username)) {
+                if (session.getId().equals(peer.getId())) {
+                    sessions.get(username).remove(session);
+                }
+            }
+        }
     }
 
     @OnMessage
     public void onMessage(String message, Session client) throws IOException, EncodeException {
-        for (Session peer : peers) {
-            peer.getBasicRemote().sendObject(message);
-        }
-    }
-
-    public void sendToAllSessions(Kweet kweet) throws EncodeException {
-        try {
-            for (Session peer : peers) {
-                peer.getBasicRemote().sendObject(kweet);
-            }
-        } catch (IOException ex) {
-            Logger.getLogger(WebSocket.class.getName()).log(Level.SEVERE, null, ex);
-        }
     }
 
     public void sendToAllSessions(@Observes KweetEvent kweetEvent) {
-        try {
-            for (Session peer : peers) {
-                peer.getBasicRemote().sendObject(kweetEvent.getKweet());
+        for (User user : kweetEvent.getKweet().getCreatedBy().getFollowers()) {
+            if (sessions.get(user.getUsername()) != null) {
+                for (Session session : sessions.get(user.getUsername())) {
+                    try {
+                        session.getBasicRemote().sendObject(kweetEvent.getKweet());
+                    } catch (IOException | EncodeException ex) {
+                        Logger.getLogger(WebSocket.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
             }
-        } catch (IOException | EncodeException ex) {
-            Logger.getLogger(WebSocket.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
     @OnError
     public void onError(Throwable t) {
         System.out.println(t.getCause());
+    }
+
+    private String getUsername(String token) {
+        String username = null;
+        try {
+            username = this.jwtStore.getCredential(token).getCaller();
+        } catch (Exception ex) {
+            Logger.getLogger(WebSocket.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return username;
     }
 }

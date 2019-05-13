@@ -28,7 +28,7 @@ public class KweetDecoder implements Decoder.Text<KweetView> {
         kweet.setId(Long.valueOf(jsonObject.getString("id")));
         kweet.setContent(jsonObject.getString("content"));
         kweet.setPostedOn(new Date(jsonObject.getString("postedOn")));
-        kweet.setCreatedBy(userservice.getUser(jsonObject.getString("username")).getUsername());
+        kweet.setCreatedBy(userservice.getUserByName(jsonObject.getString("username")).getUsername());
         kweet.setLikes(jsonObject.getInt("likes"));
         return kweet;
     }
