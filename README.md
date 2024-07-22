@@ -1,3 +1,7 @@
 # RUN
 
-docker-compose up
+## How to run
+
+```bash
+docker-compose up -d
+```
